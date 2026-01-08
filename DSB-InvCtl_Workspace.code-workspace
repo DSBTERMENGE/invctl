@@ -1,0 +1,25 @@
+{
+    "folders": [
+        {
+            "name": "Framework DSB",
+            "path": "../framework_dsb"
+        },
+        {
+            "name": "InvCtl",
+            "path": "."
+        },
+        {
+            "path": "../Templates"
+        }
+    ],
+    "settings": {
+        "explorer.compactFolders": false,
+        "explorer.fileNesting.enabled": false,
+    "liveServer.settings.multiRootWorkspaceName": "InvCtl"
+    },
+    "extensions": {
+        "recommendations": [
+            "ms-vscode.live-server"
+        ]
+    }
+}

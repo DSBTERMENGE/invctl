@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>InvCtl</title>
+  <link rel="icon" type="image/svg+xml" href="./Assets/icon_invctl.svg">
+  <link rel="alternate icon" type="image/x-icon" href="./Assets/icon_invctl.ico">
+  
+  <!-- Chart.js para gráficos interativos -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style-botoes.css">
+  <link rel="stylesheet" href="style-relatorios.css">
+</head>
+<body>
+  <!-- 
+  ⚠️ ATENÇÃO: IDs OBRIGATÓRIOS PARA O FRAMEWORK DSB
+  Os IDs abaixo são utilizados pelo ConstrutorDeInterfaceAplicacao.js
+  NÃO ALTERE estes nomes sob risco de causar falhas no aplicativo:
+  - app (contêiner principal)
+  - divCabecalho (área do cabeçalho)
+  - divTitulo (área do título)
+  - divIcone (área do ícone)
+  - divNomeApp (nome da aplicação)
+  - divDescricao (descrição da aplicação)
+  - divMenu (área dos menus)
+  - divCorpo (área principal de conteúdo)
+  - divRodape (área do rodapé)
+  -->
+  
+  <!-- app é a região da viewport (tela) -->
+  <div id="app">
+    <!-- divCabecalho é a região dentro da app que exibe o cabeçalho da aplicação. -->
+    <div id="divCabecalho">
+      <div id="divTitulo">
+        <div id="divIcone"></div>
+        <div id="divNomeApp">Nome do App</div>
+        <div id="divDescricao">Descrição do App</div>
+      </div>
+      <div id="divMenu">
+        <!-- Botões do menu principal serão inseridos dinamicamente aqui -->
+      </div>
+    </div>
+    <!-- Conteúdo principal - Cenário onde serão posicionados os elementos de cada cenário -->
+    <div id="divCorpo">
+      <!-- FORMULÁRIO COMUM (posicionado por top/left via JS) -->
+      <div id="divFormCrud" class="form-comum hidden">
+        <!-- 
+        ✅ CRÍTICO: onsubmit="return false" PREVINE RELOAD DA PÁGINA
+        Sem isso, qualquer submit do formulário causa reload e volta para login
+        Este atributo é PROTEÇÃO ADICIONAL contra comportamento padrão de submit
+        -->
+        <form id="formCrud" onsubmit="return false;">
+          <header>
+            <h2 id="formTitulo">Título do Formulário</h2>
+            <p id="formDescricao">Descrição do formulário.</p>
+            <div id="divControlesFormulario">
+              <!-- Selects, filtros, botões serão inseridos aqui via JS -->
+            </div>
+          </header>
+
+          <main id="mainConteudo">
+          <!-- JS insere os campos aqui -->
+          </main>
+
+          <footer>
+            <div id="divBotoesFormComum">
+              <!-- Botões de comando serão inseridos aqui -->
+            </div>
+          </footer>
+        </form>
+      </div>
+
+      <!-- FORMULÁRIO DE LOGIN (centralizado, fixo) -->
+      <div id="divFormLogin" class="form-overlay hidden">
+        <form id="formLogin">
+          <header>
+            <h2>Login</h2>
+          </header>
+
+          <main>
+            <label for="usuario">Usuário</label>
+            <input type="text" id="usuario" name="usuario" required>
+
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" name="senha" required>
+          </main>
+
+          <footer>
+            <button type="submit">Entrar</button>
+            <button type="button" onclick="encerrarAplicativo('InvCtl')">Cancelar</button>
+          </footer>
+        </form>
+      </div>
+
+      <!-- FORMULÁRIO MODAL (centralizado, movimentável com mouse) -->
+      <div id="divFormModal" class="form-overlay form-modal hidden">
+        <form id="formModal">
+          <header id="modalHeader">
+            <h2 id="modalTitulo">Janela Modal</h2>
+          </header>
+
+          <main id="modalConteudo">
+            <!-- JS insere conteúdo aqui -->
+          </main>
+
+          <footer>
+            <button type="submit">Confirmar</button>
+            <button type="button" onclick="fecharModal()">Fechar</button>
+          </footer>
+        </form>
+      </div>
+
+      <!-- FORMULÁRIO-SUBFORMULÁRIO (centralizado, movimentável com mouse) -->
+      <form id="formMestreDetalhe" class="hidden">
+      <header>
+        <h2 id="formTitulo">Formulário Mestre-Detalhe</h2>
+      </header>
+
+      <main>
+        <!-- 🌐 Divisão: Dados principais (mestre) -->
+        <div id="formMestre" class="form-bloco">
+          <!-- Campos principais são inseridos aqui via JS -->
+        </div>
+
+        <!-- 📋 Divisão: Subformulário (detalhes, lista ou formulário) -->
+        <div id="formDetalhe" class="form-bloco detalhe">
+          <!-- Estrutura de subformulário inserida aqui via JS -->
+        </div>
+      </main>
+
+      <footer>
+        <button type="submit">Salvar</button>
+        <button type="button" onclick="fecharFormulario()">Cancelar</button>
+      </footer>
+    </form>        
+
+      <!-- TABELA PARA RELATÓRIOS(especializado em exibir tabelas) -->
+      <div id="divRelatorio" class="form-relatorio hidden">
+          <div id="divTituloRelatorio">
+            <div id="divTitRelFilha">
+              <h1 id="h1TituloRelatorio"></h1>
+              <h2 id="h2DescricaoRelatorio"></h2>
+            </div>
+            <div id="divRelSair" style="float: right;">
+              <button id="btnEncerrarRelatorio" class="btn-encerrar" title="Encerrar Relatório">
+                <img src="/framework_dsb/frontend/Assets/icon-sair.svg" alt="Encerrar" width="20" height="20">
+              </button>
+            </div>
+          </div>
+            <!-- Tabela será inserida aqui via JS -->
+
+      </div>
+    </div>
+    
+    <!-- ⚠️ ID OBRIGATÓRIO: divRodape (usado pelo framework) -->
+    <div id="divRodape">
+      <!-- Informações de rodapé -->
+    </div>
+  </div>
+  
+  <!-- Framework DSB - Classes Gerais -->
+  <script src="../framework_dsb/frontend/General_Classes/FeedbackOperacao.js"></script>
+  
+  <script type="module" src="main.js"></script>
+</body>
+</html>

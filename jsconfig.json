@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": [
+      "ES2020",
+      "DOM"
+    ],
+    "allowJs": true,
+    "checkJs": false,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "paths": {
+      "../framework_dsb/*": ["../framework_dsb/*"]
+    },
+    "typeRoots": ["./types"]
+  },
+  "include": [
+    "**/*.js",
+    "types/**/*.d.ts",
+    "../framework_dsb/frontend/**/*.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.min.js"
+  ]
+}

@@ -53,13 +53,15 @@ CREATE TABLE tipo_investimento (
     codigo VARCHAR(30) NOT NULL UNIQUE,
     descricao VARCHAR(255) NOT NULL,
     classe VARCHAR(30) NOT NULL,
-    possui_garantia_fgc_padrao CHAR(1) DEFAULT 'N' CHECK (possui_garantia_fgc_padrao IN ('S', 'N')),
+    garantia_fgc CHAR(1) DEFAULT 'N' CHECK (garantia_fgc IN ('S', 'N')),
     ativo CHAR(1) DEFAULT 'S' CHECK (ativo IN ('S', 'N')),
+    obs TEXT,
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 COMMENT ON TABLE tipo_investimento IS 'Tipos de investimentos disponíveis no sistema';
 COMMENT ON COLUMN tipo_investimento.classe IS 'RENDA_FIXA, RENDA_VARIAVEL, FUNDO';
+COMMENT ON COLUMN tipo_investimento.garantia_fgc IS 'S=Com garantia FGC, N=Sem garantia FGC';
 
 -- ============================================
 -- TABELA: TIPO_FUNDO

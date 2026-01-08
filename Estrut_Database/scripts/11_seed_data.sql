@@ -35,7 +35,7 @@ INSERT INTO indexador (codigo, descricao, tipo, ativo) VALUES
 -- ============================================
 -- SEED DATA - TIPO_INVESTIMENTO
 -- ============================================
-INSERT INTO tipo_investimento (codigo, descricao, classe, possui_garantia_fgc_padrao, ativo) VALUES
+INSERT INTO tipo_investimento (codigo, descricao, classe, garantia_fgc, ativo) VALUES
 -- Renda Fixa - Banco
 ('CDB', 'Certificado de Depósito Bancário', 'RENDA_FIXA', 'S', 'S'),
 ('LCI', 'Letra de Crédito Imobiliário', 'RENDA_FIXA', 'S', 'S'),

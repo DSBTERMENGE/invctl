@@ -1,0 +1,19 @@
+{
+  "name": "invctl",
+  "version": "1.0.0",
+  "description": "Sistema de Controle de Investimentos",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["investimentos", "controle", "financeiro"],
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "dependencies": {
+    "@dsb/framework-ui": "github:DSBTERMENGE/framework-frontend"
+  }
+}

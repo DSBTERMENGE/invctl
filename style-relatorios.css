@@ -1,0 +1,273 @@
+/*
+ * STYLE-RELATORIOS.CSS
+ * Sistema de estilos específicos para relatórios e tabelas dinâmicas
+ * Framework DSB - InvCtl
+ */
+
+/* ==============================================
+   CONTAINER PRINCIPAL DE RELATÓRIOS
+   ============================================== */
+
+#divRelatorio {
+    /* Posicionamento para container pai */
+    position: relative;
+    
+    /* Dimensionamento - Baseado na largura real do divCorpo */
+    width: 99vw; /* 100vw - 1vw (padding do #app) */
+    max-width: 99vw;
+    max-height: calc(100% - 2rem);
+    box-sizing: border-box;
+    
+    /* Espaçamento Interno */
+    padding: 1rem;
+    
+    /* Controle de Overflow */
+    overflow: auto;
+    
+    /* Transições Suaves */
+    transition: all 0.3s ease;
+}
+
+/* ==============================================
+   DIVS FILHAS (CONTAINERS DE TABELAS/GRÁFICOS)
+   ============================================== */
+
+/* Título do Relatório - Título e Descrição Lado a Lado */
+#divTituloRelatorio {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* Container dos títulos h1 e h2 */
+#divTitRelFilha {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+}
+
+/* Estilos dos títulos */
+#h1TituloRelatorio {
+    margin: 0;
+    color: #003366;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+#h2DescricaoRelatorio {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+    font-style: italic;
+    font-weight: normal;
+}
+
+#divRelatorio > div[id^="divSubRel_"] {
+    /* Posicionamento Flexível */
+    position: relative;
+    
+    /* Dimensionamento Automático */
+    width: auto;
+    height: auto;
+    
+    /* Espaçamento e Bordas */
+    padding: 0.5rem;
+    border-radius: 8px;
+    
+    /* Sombra Sutil */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+    /* Fundo Transparente */
+    background-color: rgba(255, 255, 255, 0.05);
+    
+    /* Transições */
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+/* Hover Effect para Divs Filhas */
+#divRelatorio > div[id^="divSubRel_"]:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+/* ==============================================
+   RESPONSIVIDADE
+   ============================================== */
+
+/* Tablets e telas médias */
+@media (max-width: 1024px) {
+    #divRelatorio {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 0.8rem;
+        padding: 0.8rem;
+    }
+}
+
+/* Dispositivos móveis */
+@media (max-width: 768px) {
+    #divRelatorio {
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+        padding: 0.6rem;
+    }
+}
+
+/* ==============================================
+   CLASSES HIDDEN E VISIBILITY
+   ============================================== */
+
+.hidden {
+    display: none !important;
+}
+
+/* Fade in animation para quando remove hidden */
+#divRelatorio:not(.hidden) {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==============================================
+   TABELAS DE ANÁLISE (GridAnalise)
+   ============================================== */
+
+.tabela-analise {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.5rem 0;
+    font-family: inherit;
+    font-size: 0.9rem;
+}
+
+.tabela-analise th,
+.tabela-analise td {
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    vertical-align: middle;
+}
+
+.tabela-analise th {
+    background-color: #f5f5f5;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 2px solid #ccc;
+}
+
+.tabela-analise td {
+    background-color: #ffffff;
+    color: #444;
+}
+
+.tabela-analise tr:nth-child(even) td {
+    background-color: #f9f9f9;
+}
+
+.tabela-analise tr:hover td {
+    background-color: #e6f3ff;
+    transition: background-color 0.2s ease;
+}
+
+/* Separadores especiais */
+.tabela-analise tr.separador td {
+    padding: 4px 0;
+    border: none;
+    background-color: transparent;
+}
+
+.tabela-analise tr.separador hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 0;
+}
+
+/* Header da análise */
+.header-analise {
+    margin-bottom: 0.5rem;
+}
+
+.header-analise h3 {
+    margin: 0;
+    padding: 0.5rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 2px solid #007acc;
+}
+
+/* ==================================================
+   Estilo específico para o título do relatório
+   (aplica apenas ao container #divTituloRelatorio)
+   Evita que o h2/p quebrem linha e preserva o botão
+   ==================================================*/
+#divTituloRelatorio {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.25rem 0;
+}
+
+/* Quando existe wrapper criado pelo JS (classe criada dinamicamente),
+   permitir que ele ocupe o espaço restante e seja truncado quando necessário */
+#divTituloRelatorio .titulo-rel-wrapper {
+    flex: 1 1 auto;
+    min-width: 0; /* permite o truncamento interno */
+}
+
+/* Cobre também o caso onde h2/p estão diretamente dentro do container */
+#divTituloRelatorio > h2,
+#divTituloRelatorio > p {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+}
+
+#divTituloRelatorio h2,
+#divTituloRelatorio p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Garante que o bloco de controles (botões) não encolha nem seja truncado */
+#divRelSair {
+    flex: 0 0 auto;
+}
+
+/* Estilos específicos para containers de filtros e sub-relatórios
+   - aplicam uma borda clara e fundo levemente destacado para facilitar
+     a visualização dos limites durante desenvolvimento e uso. */
+#divRelatorio > div[class^="divSubRelFiltro"],
+#divRelatorio > div[id^="divSubRelFiltro_"] {
+    border: 1px solid rgba(0,0,0,0.06);
+    background-color: #fbfdff; /* tom muito claro para contraste */
+    padding: 0.65rem;
+    border-radius: 8px;
+}
+
+/* Campos internos do grid de filtros */
+.grid-filtros-form {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+.grid-filtros-field label {
+    font-weight: 600;
+    color: #234;
+}
+.grid-filtros-field select,
+.grid-filtros-field input {
+    padding: 0.35rem 0.5rem;
+    border: 1px solid #e6eef6;
+    border-radius: 6px;
+    background: #fff;
+}
