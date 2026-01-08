@@ -5,14 +5,13 @@
             "path": "../framework_dsb"
         },
         {
-            "name": "InvCtl",
-            "path": "."
-        },
-        {
             "path": "../Templates"
         },
         {
             "path": "../FinCtl"
+        },
+        {
+            "path": "."
         }
     ],
     "settings": {

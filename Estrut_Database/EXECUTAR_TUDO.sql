@@ -139,6 +139,46 @@ FROM tipo_investimento
 ORDER BY codigo;
 
 -- ============================================
+-- TABELA: CORRETORAS
+-- ============================================
+CREATE TABLE IF NOT EXISTS corretoras (
+    id_corretora SERIAL PRIMARY KEY,
+    cnpj VARCHAR(14) NOT NULL UNIQUE,
+    nome_completo VARCHAR(255) NOT NULL,
+    nome_fantasia VARCHAR(255),
+    codigo_cvm VARCHAR(20) UNIQUE,
+    tipo VARCHAR(20),
+    status_operacional VARCHAR(30),
+    taxa_custodia_renda_variavel NUMERIC(8, 4),
+    taxa_corretagem_padrao NUMERIC(8, 2),
+    observacoes TEXT,
+    ativo CHAR(1) DEFAULT 'S' CHECK (ativo IN ('S', 'N')),
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    data_ultima_atualizacao TIMESTAMP
+);
+
+COMMENT ON TABLE corretoras IS 'Corretoras e distribuidoras de valores';
+COMMENT ON COLUMN corretoras.tipo IS 'CORRETORA, DTVM';
+
+-- ============================================
+-- CRIAR VIEW PARA FORMULÁRIO CORRETORAS
+-- ============================================
+CREATE OR REPLACE VIEW corretoras_view AS
+SELECT 
+    id_corretora AS id,
+    cnpj AS "CNPJ",
+    nome_completo AS "Nome Completo",
+    nome_fantasia AS "Nome Fantasia",
+    codigo_cvm AS "Código CVM",
+    tipo AS "Tipo",
+    status_operacional AS "Status",
+    taxa_custodia_renda_variavel AS "Taxa Custódia RV",
+    taxa_corretagem_padrao AS "Taxa Corretagem",
+    observacoes AS "Observações",
+    ativo AS "Ativo"
+FROM corretoras;
+
+-- ============================================
 -- INSERIR USUÁRIO ADMINISTRADOR PADRÃO
 -- senha: admin (hash bcrypt)
 -- ============================================

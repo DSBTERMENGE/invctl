@@ -11,6 +11,7 @@ import { encerrarAplicativo } from '../framework_dsb/frontend/General_Classes/Fu
 
 // TODO: Importar formulários específicos do InvCtl quando criados
 import { construirFormularioTipoInvestimento, iniciarPopulacaoForm as iniciarPopulacaoTipoInv } from './form_tipo_investimento.js';
+import { construirFormularioCorretoras } from './form_corretoras.js';
 // import { construirFormularioBancos } from './form_bancos.js';
 // import { construirFormularioRendaFixa } from './form_renda_fixa.js';
 
@@ -37,6 +38,8 @@ export function registrarListeners() {
     const menusComListeners = [
         { id: 'id_menu_principal', handler: handlerMenuPrincipal },
         { id: 'id_menu_cadastro', handler: handlerMenuCadastro },
+        { id: 'id_menu_detalhes_inv', handler: handlerMenuDetalhesInv },
+        { id: 'id_menu_instit_finan', handler: handlerMenuInstitFinan },
         { id: 'id_menu_investimentos', handler: handlerMenuInvestimentos },
         { id: 'id_menu_relatorios', handler: handlerMenuRelatorios },
         { id: 'id_menu_rel_investimentos', handler: handlerMenuRelInvestimentos },
@@ -155,6 +158,36 @@ function handlerMenuCadastro(e) {
             alternarMenu('id_menu_cadastro', 'id_menu_investimentos');
             break;
             
+        case "Detalhes Inv":
+            console.log('📋 Abrindo submenu Detalhes Inv...');
+            alternarMenu('id_menu_cadastro', 'id_menu_detalhes_inv');
+            break;
+            
+        case "Instit. Finan":
+            console.log('🏦 Abrindo submenu Instituições Financeiras...');
+            alternarMenu('id_menu_cadastro', 'id_menu_instit_finan');
+            break;
+            
+        case "Índices":
+            console.log('📊 Abrindo formulário Índices...');
+            alert('Formulário "Índices" em desenvolvimento');
+            break;
+
+        default:
+            console.warn('⚠️ Opção não reconhecida:', e.detail.label);
+    }
+}
+
+// ============= HANDLER: Menu Detalhes Inv (3º nível) =============
+function handlerMenuDetalhesInv(e) {
+    console.log('📋 Menu Detalhes Inv - Botão clicado:', e.detail.label);
+
+    switch (e.detail.label) {
+        case "Retornar":
+            console.log('↩️ Retornando ao menu Cadastro...');
+            alternarMenu('id_menu_detalhes_inv', 'id_menu_cadastro');
+            break;
+            
         case "Detalhes Inv RF":
             console.log('📊 Abrindo formulário Detalhes Inv RF...');
             window.api_info.form_ativo = construirFormularioTipoInvestimento();
@@ -164,33 +197,77 @@ function handlerMenuCadastro(e) {
         case "Detalhes Inv Fundos":
             console.log('📈 Abrindo formulário Detalhes Inv Fundos...');
             alert('Formulário "Detalhes Inv Fundos" em desenvolvimento');
-            // TODO: window.api_info.form_ativo = construirFormDetalhesInvFundos();
             break;
-
+            
         case "Detalhes Inv FII":
             console.log('🏢 Abrindo formulário Detalhes Inv FII...');
             alert('Formulário "Detalhes Inv FII" em desenvolvimento');
-            // TODO: window.api_info.form_ativo = construirFormDetalhesInvFII();
             break;
-
+            
         case "Detalhes Inv RV":
-            console.log('📊 Abrindo formulário Detalhes Inv RV...');
+            console.log('📈 Abrindo formulário Detalhes Inv RV...');
             alert('Formulário "Detalhes Inv RV" em desenvolvimento');
-            // TODO: window.api_info.form_ativo = construirFormDetalhesInvRV();
             break;
 
-        case "Inst. financeiras":
-            console.log('🏦 Abrindo formulário Inst. financeiras...');
-            alert('Formulário "Inst. financeiras" em desenvolvimento');
-            // TODO: window.api_info.form_ativo = construirFormInstFinanceiras();
+        default:
+            console.warn('⚠️ Opção não reconhecida:', e.detail.label);
+    }
+}
+
+// ============= HANDLER: Menu Instituições Financeiras (3º nível) =============
+function handlerMenuInstitFinan(e) {
+    console.log('🏦 Menu Instit. Finan - Botão clicado:', e.detail.label);
+
+    switch (e.detail.label) {
+        case "Retornar":
+            console.log('↩️ Retornando ao menu Cadastro...');
+            alternarMenu('id_menu_instit_finan', 'id_menu_cadastro');
+            break;
+            
+        case "Corretoras":
+            console.log('🏦 Abrindo formulário Corretoras...');
+            window.api_info.form_ativo = construirFormularioCorretoras();
+            break;
+            
+        case "Bancos":
+            console.log('🏦 Abrindo formulário Bancos...');
+            alert('Formulário "Bancos" em desenvolvimento');
+            break;
+            
+        case "Securitizadoras":
+            console.log('🏢 Abrindo formulário Securitizadoras...');
+            alert('Formulário "Securitizadoras" em desenvolvimento');
+            break;
+            
+        case "Gestoras":
+            console.log('💼 Abrindo formulário Gestoras...');
+            alert('Formulário "Gestoras" em desenvolvimento');
+            break;
+            
+        case "Administradoras":
+            console.log('📊 Abrindo formulário Administradoras...');
+            alert('Formulário "Administradoras" em desenvolvimento');
             break;
 
+        default:
+            console.warn('⚠️ Opção não reconhecida:', e.detail.label);
+    }
+}
+
+// ============= HANDLER: Menu Investimentos (3º nível) =============
+function handlerMenuInvestimentos(e) {
+    console.log('📂 Menu Investimentos - Botão clicado:', e.detail.label);
+
+    switch (e.detail.label) {
         case "Índices":
             console.log('📉 Abrindo formulário Índices...');
             alert('Formulário "Índices" em desenvolvimento');
-            // TODO: window.api_info.form_ativo = construirFormIndices();
             break;
              
+        case "Retornar":
+            alternarMenu('id_menu_investimentos', 'id_menu_cadastro');
+            break;
+            
         default:
             console.log('⚠️ Opção não implementada:', e.detail.label);
             alert(`Funcionalidade "${e.detail.label}" em desenvolvimento`);
@@ -327,7 +404,7 @@ export function constroiMenus() {
 
     // =============== Criando o sub menu Cadastro ===============
     const menu_cadastro = new CriarMenuAplicacao(
-        ["Investimentos", "Detalhes Inv RF", "Detalhes Inv Fundos", "Detalhes Inv FII", "Detalhes Inv RV", "Inst. financeiras", "Índices", "Retornar"],
+        ["Investimentos", "Detalhes Inv", "Instit. Finan", "Índices", "Retornar"],
         "horizontal",
         "id_menu_cadastro",
         "cmd"
@@ -335,6 +412,28 @@ export function constroiMenus() {
     menu_cadastro.renderizar();
     document.getElementById("id_menu_cadastro").style.display = "none";
     console.log('✅ Menu Cadastro criado (oculto)');
+
+    // =============== Criando o sub menu Detalhes Inv (3º nível) ===============
+    const menu_detalhes_inv = new CriarMenuAplicacao(
+        ["Detalhes Inv RF", "Detalhes Inv Fundos", "Detalhes Inv FII", "Detalhes Inv RV", "Retornar"],
+        "horizontal",
+        "id_menu_detalhes_inv",
+        "cmd"
+    );
+    menu_detalhes_inv.renderizar();
+    document.getElementById("id_menu_detalhes_inv").style.display = "none";
+    console.log('✅ Menu Detalhes Inv criado (oculto)');
+
+    // =============== Criando o sub menu Instituições Financeiras (3º nível) ===============
+    const menu_instit_finan = new CriarMenuAplicacao(
+        ["Corretoras", "Bancos", "Securitizadoras", "Gestoras", "Administradoras", "Retornar"],
+        "horizontal",
+        "id_menu_instit_finan",
+        "cmd"
+    );
+    menu_instit_finan.renderizar();
+    document.getElementById("id_menu_instit_finan").style.display = "none";
+    console.log('✅ Menu Instituições Financeiras criado (oculto)');
 
     // =============== Criando o sub menu Investimentos (3º nível) ===============
     const menu_investimentos = new CriarMenuAplicacao(
