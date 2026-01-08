@@ -6,9 +6,10 @@
 -- IMPORTANTE: Execute conectado ao database 'postgres' primeiro
 -- para poder criar o database invctl_db
 
--- Se o database já existir, comente as 3 linhas abaixo:
-DROP DATABASE IF EXISTS invctl_db;
-CREATE DATABASE invctl_db;
+-- ⚠️ ATENÇÃO: Linhas abaixo COMENTADAS para não deletar dados existentes!
+-- Se quiser recriar do zero, descomente as 3 linhas abaixo:
+-- DROP DATABASE IF EXISTS invctl_db;
+-- CREATE DATABASE invctl_db;
 -- Agora reconecte ao database invctl_db e execute o resto
 
 -- ============================================
@@ -92,9 +93,20 @@ INSERT INTO tipo_investimento (codigo, descricao, classe, garantia_fgc, ativo) V
 ('CRA', 'Certificado de Recebíveis do Agronegócio', 'RENDA_FIXA', 'N', 'S'),
 ('TESOURO_SELIC', 'Tesouro Selic', 'RENDA_FIXA', 'N', 'S'),
 ('TESOURO_PREFIXADO', 'Tesouro Prefixado', 'RENDA_FIXA', 'N', 'S'),
+('TESOURO_PREFIXADO_JUROS', 'Tesouro Prefixado com Juros Semestrais', 'RENDA_FIXA', 'N', 'S'),
 ('TESOURO_IPCA', 'Tesouro IPCA+', 'RENDA_FIXA', 'N', 'S'),
+('TESOURO_IPCA_JUROS', 'Tesouro IPCA+ com Juros Semestrais', 'RENDA_FIXA', 'N', 'S'),
 ('ACAO', 'Ação', 'RENDA_VARIAVEL', 'N', 'S'),
-('FII', 'Fundo de Investimento Imobiliário', 'RENDA_VARIAVEL', 'N', 'S')
+('BDR', 'Brazilian Depositary Receipt', 'RENDA_VARIAVEL', 'N', 'S'),
+('ETF', 'Exchange Traded Fund', 'RENDA_VARIAVEL', 'N', 'S'),
+('FII', 'Fundo de Investimento Imobiliário', 'RENDA_VARIAVEL', 'N', 'S'),
+('FIAGRO', 'Fundo de Investimento nas Cadeias Produtivas Agroindustriais', 'RENDA_VARIAVEL', 'N', 'S'),
+('FI_INFRA', 'Fundo de Investimento em Infraestrutura', 'RENDA_VARIAVEL', 'N', 'S'),
+('FUNDO_RF', 'Fundo de Renda Fixa', 'FUNDO', 'N', 'S'),
+('FUNDO_ACOES', 'Fundo de Ações', 'FUNDO', 'N', 'S'),
+('FUNDO_MULTIMERCADO', 'Fundo Multimercado', 'FUNDO', 'N', 'S'),
+('FUNDO_CAMBIAL', 'Fundo Cambial', 'FUNDO', 'N', 'S'),
+('FUNDO_PREVIDENCIA', 'Fundo de Previdência (PGBL/VGBL)', 'PREVIDENCIA', 'N', 'S')
 ON CONFLICT (codigo) DO NOTHING;
 
 -- ============================================
@@ -111,6 +123,20 @@ SELECT
     ativo
 FROM usuarios
 WHERE ativo = 'S';
+
+-- ============================================
+-- CRIAR VIEW PARA RELATÓRIO TIPO INVESTIMENTO
+-- ============================================
+CREATE OR REPLACE VIEW tipo_investimento_view AS
+SELECT 
+    codigo AS "Código",
+    descricao AS "Descrição",
+    classe AS "Classe",
+    garantia_fgc AS "FGC",
+    ativo AS "Ativo",
+    obs AS "Obs"
+FROM tipo_investimento
+ORDER BY codigo;
 
 -- ============================================
 -- INSERIR USUÁRIO ADMINISTRADOR PADRÃO

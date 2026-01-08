@@ -14,6 +14,9 @@ import { construirFormularioTipoInvestimento, iniciarPopulacaoForm as iniciarPop
 // import { construirFormularioBancos } from './form_bancos.js';
 // import { construirFormularioRendaFixa } from './form_renda_fixa.js';
 
+// Importar relatórios
+import { CriarRelatorioTipoInvestimento } from './relatorioTipoInvestimento.js';
+
 
 // Função para criar títulos (equivalente ao que ui_menu.js fazia)
 export function criarTitulos() {
@@ -34,7 +37,10 @@ export function registrarListeners() {
     const menusComListeners = [
         { id: 'id_menu_principal', handler: handlerMenuPrincipal },
         { id: 'id_menu_cadastro', handler: handlerMenuCadastro },
-        { id: 'id_menu_investimentos', handler: handlerMenuInvestimentos }
+        { id: 'id_menu_investimentos', handler: handlerMenuInvestimentos },
+        { id: 'id_menu_relatorios', handler: handlerMenuRelatorios },
+        { id: 'id_menu_rel_investimentos', handler: handlerMenuRelInvestimentos },
+        { id: 'id_menu_rel_detalhes', handler: handlerMenuRelDetalhes }
     ];
     
     // Registra os event listeners para cada menu
@@ -78,8 +84,8 @@ async function handlerMenuPrincipal(e) {
             break;
 
         case "Relatórios":
-            console.log('📊 Relatórios');
-            alert('Funcionalidade "Relatórios" em desenvolvimento');
+            console.log('📊 Abrindo submenu de Relatórios...');
+            alternarMenu('id_menu_principal', 'id_menu_relatorios');
             break;
             
         default:
@@ -192,6 +198,93 @@ function handlerMenuCadastro(e) {
     }
 }
 
+/**
+ * Handler do Menu Relatórios (Nível 2)
+ */
+function handlerMenuRelatorios(e) {
+    console.log('📊 Menu Relatórios - Botão clicado:', e.detail.label);
+
+    switch (e.detail.label) {
+        case "Retornar":
+            console.log('↩️ Retornando ao menu principal...');
+            alternarMenu('id_menu_relatorios', 'id_menu_principal');
+            break;
+
+        case "Investimentos":
+            console.log('💼 Abrindo submenu Rel. Investimentos...');
+            alternarMenu('id_menu_relatorios', 'id_menu_rel_investimentos');
+            break;
+
+        case "Detalhes INV":
+            console.log('📋 Abrindo submenu Rel. Detalhes INV...');
+            alternarMenu('id_menu_relatorios', 'id_menu_rel_detalhes');
+            break;
+
+        default:
+            console.log('⚠️ Opção não implementada:', e.detail.label);
+            alert(`Funcionalidade "${e.detail.label}" em desenvolvimento`);
+            break;
+    }
+}
+
+/**
+ * Handler do Menu Rel. Investimentos (Nível 3)
+ */
+function handlerMenuRelInvestimentos(e) {
+    console.log('💼 Menu Rel. Investimentos - Botão clicado:', e.detail.label);
+
+    switch (e.detail.label) {
+        case "Retornar":
+            console.log('↩️ Retornando ao menu relatórios...');
+            alternarMenu('id_menu_rel_investimentos', 'id_menu_relatorios');
+            break;
+
+        case "Inv RF":
+            console.log('📊 Abrindo relatório Investimentos RF...');
+            alert('Relatório "Investimentos RF" em desenvolvimento');
+            break;
+
+        case "Inv Fundos":
+            console.log('📊 Abrindo relatório Investimentos Fundos...');
+            alert('Relatório "Investimentos Fundos" em desenvolvimento');
+            break;
+
+        default:
+            console.log('⚠️ Opção não implementada:', e.detail.label);
+            alert(`Funcionalidade "${e.detail.label}" em desenvolvimento`);
+            break;
+    }
+}
+
+/**
+ * Handler do Menu Rel. Detalhes INV (Nível 3)
+ */
+function handlerMenuRelDetalhes(e) {
+    console.log('📋 Menu Rel. Detalhes INV - Botão clicado:', e.detail.label);
+
+    switch (e.detail.label) {
+        case "Retornar":
+            console.log('↩️ Retornando ao menu relatórios...');
+            alternarMenu('id_menu_rel_detalhes', 'id_menu_relatorios');
+            break;
+
+        case "Tipos de Investim.":
+            console.log('📊 Abrindo relatório Tipos de Investimento...');
+            CriarRelatorioTipoInvestimento();
+            break;
+
+        case "Corretoras":
+            console.log('📊 Abrindo relatório Corretoras...');
+            alert('Relatório "Corretoras" em desenvolvimento');
+            break;
+
+        default:
+            console.log('⚠️ Opção não implementada:', e.detail.label);
+            alert(`Funcionalidade "${e.detail.label}" em desenvolvimento`);
+            break;
+    }
+}
+
 // ============= FUNÇÃO AUXILIAR DE NAVEGAÇÃO =============
 
 /**
@@ -253,4 +346,37 @@ export function constroiMenus() {
     menu_investimentos.renderizar();
     document.getElementById("id_menu_investimentos").style.display = "none";
     console.log('✅ Menu Investimentos criado (oculto)');
+
+    // =============== Criando o sub menu Relatórios (2º nível) ===============
+    const menu_relatorios = new CriarMenuAplicacao(
+        ["Investimentos", "Detalhes INV", "Retornar"],
+        "horizontal",
+        "id_menu_relatorios",
+        "cmd"
+    );
+    menu_relatorios.renderizar();
+    document.getElementById("id_menu_relatorios").style.display = "none";
+    console.log('✅ Menu Relatórios criado (oculto)');
+
+    // =============== Criando o sub menu Rel. Investimentos (3º nível) ===============
+    const menu_rel_investimentos = new CriarMenuAplicacao(
+        ["Inv RF", "Inv Fundos", "Retornar"],
+        "horizontal",
+        "id_menu_rel_investimentos",
+        "cmd"
+    );
+    menu_rel_investimentos.renderizar();
+    document.getElementById("id_menu_rel_investimentos").style.display = "none";
+    console.log('✅ Menu Rel. Investimentos criado (oculto)');
+
+    // =============== Criando o sub menu Rel. Detalhes INV (3º nível) ===============
+    const menu_rel_detalhes = new CriarMenuAplicacao(
+        ["Tipos de Investim.", "Corretoras", "Retornar"],
+        "horizontal",
+        "id_menu_rel_detalhes",
+        "cmd"
+    );
+    menu_rel_detalhes.renderizar();
+    document.getElementById("id_menu_rel_detalhes").style.display = "none";
+    console.log('✅ Menu Rel. Detalhes INV criado (oculto)');
 }

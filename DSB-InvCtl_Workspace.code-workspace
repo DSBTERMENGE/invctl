@@ -10,6 +10,9 @@
         },
         {
             "path": "../Templates"
+        },
+        {
+            "path": "../FinCtl"
         }
     ],
     "settings": {
