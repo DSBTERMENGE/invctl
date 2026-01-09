@@ -190,8 +190,14 @@ function handlerMenuDetalhesInv(e) {
             
         case "Detalhes Inv RF":
             console.log('📊 Abrindo formulário Detalhes Inv RF...');
-            window.api_info.form_ativo = construirFormularioTipoInvestimento();
-            iniciarPopulacaoTipoInv();
+            try {
+                window.api_info.form_ativo = construirFormularioTipoInvestimento();
+                console.log('✅ Formulário construído, iniciando população...');
+                iniciarPopulacaoTipoInv();
+                console.log('✅ População iniciada com sucesso');
+            } catch (error) {
+                console.error('❌ Erro ao abrir formulário Detalhes Inv RF:', error);
+            }
             break;
 
         case "Detalhes Inv Fundos":
@@ -251,27 +257,6 @@ function handlerMenuInstitFinan(e) {
 
         default:
             console.warn('⚠️ Opção não reconhecida:', e.detail.label);
-    }
-}
-
-// ============= HANDLER: Menu Investimentos (3º nível) =============
-function handlerMenuInvestimentos(e) {
-    console.log('📂 Menu Investimentos - Botão clicado:', e.detail.label);
-
-    switch (e.detail.label) {
-        case "Índices":
-            console.log('📉 Abrindo formulário Índices...');
-            alert('Formulário "Índices" em desenvolvimento');
-            break;
-             
-        case "Retornar":
-            alternarMenu('id_menu_investimentos', 'id_menu_cadastro');
-            break;
-            
-        default:
-            console.log('⚠️ Opção não implementada:', e.detail.label);
-            alert(`Funcionalidade "${e.detail.label}" em desenvolvimento`);
-            break;
     }
 }
 
