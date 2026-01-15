@@ -9,10 +9,13 @@ import { ConstrutorDeInterfaceAplicacao } from '../framework_dsb/frontend/Genera
 import { CriarMenuAplicacao } from '../framework_dsb/frontend/General_Classes/ConstrutorMenuAplicacao.js';
 import { encerrarAplicativo } from '../framework_dsb/frontend/General_Classes/FuncoesAuxilares.js';
 
-// TODO: Importar formulários específicos do InvCtl quando criados
+// Importar formulários específicos do InvCtl
 import { construirFormularioTipoInvestimento, iniciarPopulacaoForm as iniciarPopulacaoTipoInv } from './form_tipo_investimento.js';
-import { construirFormularioCorretoras } from './form_corretoras.js';
-// import { construirFormularioBancos } from './form_bancos.js';
+import { construirFormularioCorretoras, iniciarPopulacaoCorretoras } from './form_corretoras.js';
+import { construirFormularioContatos, iniciarPopulacaoContatos } from './form_contatos_instituicao.js';
+import { construirFormularioTiposInstituicao, iniciarPopulacaoTiposInstituicao } from './form_tipos_instituicao.js';
+import { construirFormularioBancos, iniciarPopulacaoBancos } from './form_bancos.js';
+import { construirFormularioSecuritizadoras, iniciarPopulacaoSecuritizadoras } from './form_securitizadoras.js';
 // import { construirFormularioRendaFixa } from './form_renda_fixa.js';
 
 // Importar relatórios
@@ -232,17 +235,62 @@ function handlerMenuInstitFinan(e) {
             
         case "Corretoras":
             console.log('🏦 Abrindo formulário Corretoras...');
-            window.api_info.form_ativo = construirFormularioCorretoras();
+            try {
+                window.api_info.form_ativo = construirFormularioCorretoras();
+                console.log('✅ Formulário construído, iniciando população...');
+                iniciarPopulacaoCorretoras();
+                console.log('✅ População iniciada com sucesso');
+            } catch (error) {
+                console.error('❌ Erro ao abrir formulário Corretoras:', error);
+            }
+            break;
+            
+        case "Contatos":
+            console.log('👤 Abrindo formulário Contatos...');
+            try {
+                window.api_info.form_ativo = construirFormularioContatos();
+                console.log('✅ Formulário construído, iniciando população...');
+                iniciarPopulacaoContatos();
+                console.log('✅ População iniciada com sucesso');
+            } catch (error) {
+                console.error('❌ Erro ao abrir formulário Contatos:', error);
+            }
+            break;
+            
+        case "Tipo Instituição":
+            console.log('🏢 Abrindo formulário Tipo Instituição...');
+            try {
+                window.api_info.form_ativo = construirFormularioTiposInstituicao();
+                console.log('✅ Formulário construído, iniciando população...');
+                iniciarPopulacaoTiposInstituicao();
+                console.log('✅ População iniciada com sucesso');
+            } catch (error) {
+                console.error('❌ Erro ao abrir formulário Tipo Instituição:', error);
+            }
             break;
             
         case "Bancos":
             console.log('🏦 Abrindo formulário Bancos...');
-            alert('Formulário "Bancos" em desenvolvimento');
+            try {
+                window.api_info.form_ativo = construirFormularioBancos();
+                console.log('✅ Formulário construído, iniciando população...');
+                iniciarPopulacaoBancos();
+                console.log('✅ População iniciada com sucesso');
+            } catch (error) {
+                console.error('❌ Erro ao abrir formulário Bancos:', error);
+            }
             break;
             
         case "Securitizadoras":
             console.log('🏢 Abrindo formulário Securitizadoras...');
-            alert('Formulário "Securitizadoras" em desenvolvimento');
+            try {
+                window.api_info.form_ativo = construirFormularioSecuritizadoras();
+                console.log('✅ Formulário construído, iniciando população...');
+                iniciarPopulacaoSecuritizadoras();
+                console.log('✅ População iniciada com sucesso');
+            } catch (error) {
+                console.error('❌ Erro ao abrir formulário Securitizadoras:', error);
+            }
             break;
             
         case "Gestoras":
@@ -411,7 +459,7 @@ export function constroiMenus() {
 
     // =============== Criando o sub menu Instituições Financeiras (3º nível) ===============
     const menu_instit_finan = new CriarMenuAplicacao(
-        ["Corretoras", "Bancos", "Securitizadoras", "Gestoras", "Administradoras", "Retornar"],
+        ["Corretoras", "Bancos", "Securitizadoras", "Gestoras", "Administradoras", "Contatos", "Tipo Instituição", "Retornar"],
         "horizontal",
         "id_menu_instit_finan",
         "cmd"

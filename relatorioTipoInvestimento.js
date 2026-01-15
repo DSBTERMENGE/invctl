@@ -48,7 +48,7 @@ async function CriarTabelaTipoInvestimento() {
     console.log('📊 Iniciando criação da tabela...');
     
     // Configuração específica para acesso ao servidor e obtenção de dados
-    window.api_rel_info.view = "tipo_investimento_view";
+    window.api_rel_info.view = "tipo_investimento_report";
     window.api_rel_info.campos = ["Todos"];
 
     console.log('🔧 Configuração da API:', {

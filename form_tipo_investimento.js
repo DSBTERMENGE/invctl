@@ -67,7 +67,7 @@ export function construirFormularioTipoInvestimento() {
     
     window.api_info.tabela_alvo = 'tipo_investimento'; // Tabela para operações CRUD
     window.api_info.campos_obrigatorios = ['codigo', 'descricao', 'classe']; // Campo obrigatórios para salvar registro
-    window.api_info.view = "tipo_investimento_view"; // View para operações CRUD
+    window.api_info.view = "tipo_investimento_view"; // View para operações CRUD (sem aliases)
     window.api_info.campos = ['Todos']; // Campos da view a serem retornados.
     
     // ✅ NOVAS PROPRIEDADES DA ABORDAGEM HÍBRIDA
@@ -208,7 +208,17 @@ export function construirFormularioTipoInvestimento() {
  * - campos_obrigatorios: NÃO usado em operações de leitura (só para CRUD)
  */
 export async function iniciarPopulacaoForm() {
-    return await popularFormulario();
+    const resultado = await popularFormulario();
+    
+    // 🔄 SINCRONIZAR SELECT COM REGISTRO EXIBIDO
+    // Após popular o formulário, sincroniza a select de pesquisa com o registro atual
+    setTimeout(async () => {
+        const { _repopularSelectDePesquisa } = await import('../framework_dsb/frontend/General_Classes/OperacoesCRUD.js');
+        _repopularSelectDePesquisa();
+        console.log('✅ Select sincronizada com registro atual');
+    }, 200);
+    
+    return resultado;
 }
 
 // ============= 2. FUNÇÕES DE APOIO =============

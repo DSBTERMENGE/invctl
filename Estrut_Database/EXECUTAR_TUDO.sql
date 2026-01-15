@@ -125,9 +125,24 @@ FROM usuarios
 WHERE ativo = 'S';
 
 -- ============================================
--- CRIAR VIEW PARA RELATÓRIO TIPO INVESTIMENTO
+-- CRIAR VIEWS PARA TIPO INVESTIMENTO
 -- ============================================
+
+-- VIEW PARA FORMULÁRIOS (sem aliases - nomes originais dos campos)
 CREATE OR REPLACE VIEW tipo_investimento_view AS
+SELECT 
+    id_tipo_investimento,
+    codigo,
+    descricao,
+    classe,
+    garantia_fgc,
+    ativo,
+    obs
+FROM tipo_investimento
+ORDER BY codigo;
+
+-- VIEW PARA RELATÓRIOS (com aliases - nomes formatados)
+CREATE OR REPLACE VIEW tipo_investimento_report AS
 SELECT 
     codigo AS "Código",
     descricao AS "Descrição",
@@ -149,6 +164,9 @@ CREATE TABLE IF NOT EXISTS corretoras (
     codigo_cvm VARCHAR(20) UNIQUE,
     tipo VARCHAR(20),
     status_operacional VARCHAR(30),
+    email_institucional VARCHAR(255),
+    telefone_institucional VARCHAR(20),
+    website VARCHAR(255),
     taxa_custodia_renda_variavel NUMERIC(8, 4),
     taxa_corretagem_padrao NUMERIC(8, 2),
     observacoes TEXT,
@@ -161,22 +179,85 @@ COMMENT ON TABLE corretoras IS 'Corretoras e distribuidoras de valores';
 COMMENT ON COLUMN corretoras.tipo IS 'CORRETORA, DTVM';
 
 -- ============================================
--- CRIAR VIEW PARA FORMULÁRIO CORRETORAS
+-- TABELA: CONTATOS DE INSTITUIÇÕES FINANCEIRAS
 -- ============================================
+CREATE TABLE IF NOT EXISTS contatos_instituicao (
+    id_contato SERIAL PRIMARY KEY,
+    -- FKs para diferentes tipos de instituição (apenas UMA deve estar preenchida)
+    id_corretora INTEGER,
+    id_banco INTEGER,
+    id_gestora INTEGER,
+    id_administradora INTEGER,
+    id_securitizadora INTEGER,
+    -- Dados do contato
+    nome_completo VARCHAR(255) NOT NULL,
+    cargo VARCHAR(50) NOT NULL,
+    funcao VARCHAR(100),
+    setor VARCHAR(100),
+    email VARCHAR(255),
+    telefone VARCHAR(20),
+    celular VARCHAR(20),
+    ramal VARCHAR(10),
+    observacoes TEXT,
+    ativo CHAR(1) DEFAULT 'S' CHECK (ativo IN ('S', 'N')),
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    data_ultima_atualizacao TIMESTAMP,
+    -- Foreign Keys
+    FOREIGN KEY (id_corretora) REFERENCES corretoras(id_corretora) ON DELETE CASCADE,
+    -- FOREIGN KEY (id_banco) REFERENCES bancos(id_banco) ON DELETE CASCADE,
+    -- FOREIGN KEY (id_gestora) REFERENCES gestoras(id_gestora) ON DELETE CASCADE,
+    -- FOREIGN KEY (id_administradora) REFERENCES administradoras(id_administradora) ON DELETE CASCADE,
+    -- FOREIGN KEY (id_securitizadora) REFERENCES securitizadoras(id_securitizadora) ON DELETE CASCADE,
+    -- Constraint: apenas UMA instituição por contato
+    CHECK (
+        (id_corretora IS NOT NULL)::int +
+        (id_banco IS NOT NULL)::int +
+        (id_gestora IS NOT NULL)::int +
+        (id_administradora IS NOT NULL)::int +
+        (id_securitizadora IS NOT NULL)::int = 1
+    )
+);
+
+COMMENT ON TABLE contatos_instituicao IS 'Contatos (pessoas) vinculados a instituições financeiras';
+COMMENT ON COLUMN contatos_instituicao.cargo IS 'ASSESSOR, GERENTE, DIRETOR, etc.';
+COMMENT ON CONSTRAINT contatos_instituicao_check ON contatos_instituicao IS 'Garante que cada contato pertence a apenas uma instituição';
+
+-- ============================================
+-- CRIAR VIEWS PARA CORRETORAS
+-- ============================================
+
+-- VIEW PARA FORMULÁRIOS (sem aliases - nomes originais dos campos)
 CREATE OR REPLACE VIEW corretoras_view AS
 SELECT 
-    id_corretora AS id,
+    id_corretora,
+    cnpj,
+    nome_completo,
+    nome_fantasia,
+    codigo_cvm,
+    tipo,
+    status_operacional,
+    email_institucional,
+    telefone_institucional,
+    website,
+    taxa_custodia_renda_variavel,
+    taxa_corretagem_padrao,
+    observacoes,
+    ativo
+FROM corretoras
+ORDER BY nome_completo;
+
+-- VIEW PARA RELATÓRIOS (com aliases - apenas campos essenciais)
+CREATE OR REPLACE VIEW corretoras_report AS
+SELECT 
     cnpj AS "CNPJ",
     nome_completo AS "Nome Completo",
     nome_fantasia AS "Nome Fantasia",
     codigo_cvm AS "Código CVM",
     tipo AS "Tipo",
     status_operacional AS "Status",
-    taxa_custodia_renda_variavel AS "Taxa Custódia RV",
-    taxa_corretagem_padrao AS "Taxa Corretagem",
-    observacoes AS "Observações",
     ativo AS "Ativo"
-FROM corretoras;
+FROM corretoras
+ORDER BY nome_completo;
 
 -- ============================================
 -- INSERIR USUÁRIO ADMINISTRADOR PADRÃO
