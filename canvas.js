@@ -16,6 +16,10 @@ import { construirFormularioContatos, iniciarPopulacaoContatos } from './form_co
 import { construirFormularioTiposInstituicao, iniciarPopulacaoTiposInstituicao } from './form_tipos_instituicao.js';
 import { construirFormularioBancos, iniciarPopulacaoBancos } from './form_bancos.js';
 import { construirFormularioSecuritizadoras, iniciarPopulacaoSecuritizadoras } from './form_securitizadoras.js';
+import { construirFormularioGestoras, iniciarPopulacaoGestoras } from './form_gestoras.js';
+import { construirFormularioAdministradoras, iniciarPopulacaoAdministradoras } from './form_administradoras.js';
+import { construirFormularioInvRF, iniciarPopulacaoInvRF } from './form_inv_rf.js';
+import { construirFormularioPapeisRF, iniciarPopulacaoPapeisRF } from './form_papeis_rf.js';
 // import { construirFormularioRendaFixa } from './form_renda_fixa.js';
 
 // Importar relatórios
@@ -115,8 +119,14 @@ function handlerMenuInvestimentos(e) {
 
         case "Inv. RF":
             console.log('📊 Abrindo formulário Inv. RF...');
-            alert('Formulário "Inv. RF" em desenvolvimento');
-            // TODO: window.api_info.form_ativo = construirFormInvRF();
+            try {
+                window.api_info.form_ativo = construirFormularioInvRF();
+                console.log('✅ Formulário construído, iniciando população...');
+                iniciarPopulacaoInvRF();
+                console.log('✅ População iniciada com sucesso');
+            } catch (error) {
+                console.error('❌ Erro ao abrir formulário Inv. RF:', error);
+            }
             break;
 
         case "Inv. Fundos":
@@ -182,7 +192,7 @@ function handlerMenuCadastro(e) {
 }
 
 // ============= HANDLER: Menu Detalhes Inv (3º nível) =============
-function handlerMenuDetalhesInv(e) {
+async function handlerMenuDetalhesInv(e) {
     console.log('📋 Menu Detalhes Inv - Botão clicado:', e.detail.label);
 
     switch (e.detail.label) {
@@ -191,16 +201,22 @@ function handlerMenuDetalhesInv(e) {
             alternarMenu('id_menu_detalhes_inv', 'id_menu_cadastro');
             break;
             
-        case "Detalhes Inv RF":
-            console.log('📊 Abrindo formulário Detalhes Inv RF...');
+        case "Tipo Investimento":
+            console.log('📋 Abrindo formulário Tipo Investimento...');
             try {
                 window.api_info.form_ativo = construirFormularioTipoInvestimento();
                 console.log('✅ Formulário construído, iniciando população...');
                 iniciarPopulacaoTipoInv();
                 console.log('✅ População iniciada com sucesso');
             } catch (error) {
-                console.error('❌ Erro ao abrir formulário Detalhes Inv RF:', error);
+                console.error('❌ Erro ao abrir formulário Tipo Investimento:', error);
             }
+            break;
+            
+        case "Papéis RF":
+            console.log('📊 Abrindo formulário Papéis RF...');
+            window.api_info.form_ativo = construirFormularioPapeisRF();
+            await iniciarPopulacaoPapeisRF();
             break;
 
         case "Detalhes Inv Fundos":
@@ -295,12 +311,26 @@ function handlerMenuInstitFinan(e) {
             
         case "Gestoras":
             console.log('💼 Abrindo formulário Gestoras...');
-            alert('Formulário "Gestoras" em desenvolvimento');
+            try {
+                window.api_info.form_ativo = construirFormularioGestoras();
+                console.log('✅ Formulário construído, iniciando população...');
+                iniciarPopulacaoGestoras();
+                console.log('✅ População iniciada com sucesso');
+            } catch (error) {
+                console.error('❌ Erro ao abrir formulário Gestoras:', error);
+            }
             break;
             
         case "Administradoras":
             console.log('📊 Abrindo formulário Administradoras...');
-            alert('Formulário "Administradoras" em desenvolvimento');
+            try {
+                window.api_info.form_ativo = construirFormularioAdministradoras();
+                console.log('✅ Formulário construído, iniciando população...');
+                iniciarPopulacaoAdministradoras();
+                console.log('✅ População iniciada com sucesso');
+            } catch (error) {
+                console.error('❌ Erro ao abrir formulário Administradoras:', error);
+            }
             break;
 
         default:
@@ -448,7 +478,7 @@ export function constroiMenus() {
 
     // =============== Criando o sub menu Detalhes Inv (3º nível) ===============
     const menu_detalhes_inv = new CriarMenuAplicacao(
-        ["Detalhes Inv RF", "Detalhes Inv Fundos", "Detalhes Inv FII", "Detalhes Inv RV", "Retornar"],
+        ["Tipo Investimento", "Papéis RF", "Detalhes Inv Fundos", "Detalhes Inv FII", "Detalhes Inv RV", "Retornar"],
         "horizontal",
         "id_menu_detalhes_inv",
         "cmd"
