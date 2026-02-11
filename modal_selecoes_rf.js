@@ -89,38 +89,14 @@ function criarModalHTML() {
                             </select>
                         </div>
                         <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Corretora *</label>
+                            <select id="modal_id_corretora" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                                <option value="">Selecione...</option>
+                            </select>
+                        </div>
+                        <div>
                             <label style="display: block; margin-bottom: 5px; font-weight: bold;">Indexador *</label>
-                            <select id="modal_id_indexador" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                                <option value="">Selecione...</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 5px;">Tipo Rentabilidade</label>
-                            <select id="modal_tipo_rentabilidade" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                                <option value="">Selecione...</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 5px;">Liquidez</label>
-                            <select id="modal_liquidez" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                                <option value="">Selecione...</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 5px;">Garantia FGC</label>
-                            <select id="modal_garantia_fgc" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                                <option value="">Selecione...</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 5px;">IOF Aplicável</label>
-                            <select id="modal_iof_aplicavel" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                                <option value="">Selecione...</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label style="display: block; margin-bottom: 5px;">Ativo</label>
-                            <select id="modal_ativo" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                            <select id="modal_indexador" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
                                 <option value="">Selecione...</option>
                             </select>
                         </div>
@@ -160,22 +136,14 @@ async function popularCombosModal() {
         // Busca elementos
         const comboTipo = document.getElementById('modal_id_tipo_investimento');
         const comboBanco = document.getElementById('modal_id_banco_emissor');
-        const comboIndexador = document.getElementById('modal_id_indexador');
-        const comboTipoRent = document.getElementById('modal_tipo_rentabilidade');
-        const comboLiquidez = document.getElementById('modal_liquidez');
-        const comboFGC = document.getElementById('modal_garantia_fgc');
-        const comboIOF = document.getElementById('modal_iof_aplicavel');
-        const comboAtivo = document.getElementById('modal_ativo');
+        const comboCorretora = document.getElementById('modal_id_corretora');
+        const comboIndexador = document.getElementById('modal_indexador');
         
         console.log('🔍 DEBUG - Elementos encontrados:', {
             comboTipo: !!comboTipo,
             comboBanco: !!comboBanco,
-            comboIndexador: !!comboIndexador,
-            comboTipoRent: !!comboTipoRent,
-            comboLiquidez: !!comboLiquidez,
-            comboFGC: !!comboFGC,
-            comboIOF: !!comboIOF,
-            comboAtivo: !!comboAtivo
+            comboCorretora: !!comboCorretora,
+            comboIndexador: !!comboIndexador
         });
         
         console.log('🔍 DEBUG - window.api_info existe?', !!window.api_info);
@@ -211,63 +179,37 @@ async function popularCombosModal() {
             console.warn('⚠️ Banco NÃO populado - comboBanco:', !!comboBanco, 'dados:', !!bancosResp?.dados?.dados);
         }
         
-        // Popular Indexador
-        console.log('📡 Buscando indexadores...');
-        const indexadoresResp = await window.api_info.consulta_dados_form('indexador');
-        console.log('📦 Resposta indexadores:', indexadoresResp);
-        console.log('📦 Resposta indexadores:', indexadoresResp);
-        if (comboIndexador && indexadoresResp?.dados?.dados) {
+        // Popular Corretora
+        console.log('📡 Buscando corretoras...');
+        const corretorasResp = await window.api_info.consulta_dados_form('corretoras_view');
+        console.log('📦 Resposta corretoras:', corretorasResp);
+        if (comboCorretora && corretorasResp?.dados?.dados) {
             let html = '<option value="">Selecione...</option>';
-            indexadoresResp.dados.dados.forEach(item => {
-                html += `<option value="${item.id_indexador}">${item.codigo}</option>`;
+            corretorasResp.dados.dados.forEach(item => {
+                html += `<option value="${item.id_corretora}">${item.nome_completo}</option>`;
             });
-            comboIndexador.innerHTML = html;
-            console.log(`✅ Indexador populado: ${indexadoresResp.dados.dados.length} opções`);
+            comboCorretora.innerHTML = html;
+            console.log(`✅ Corretora populado: ${corretorasResp.dados.dados.length} opções`);
         } else {
-            console.warn('⚠️ Indexador NÃO populado - comboIndexador:', !!comboIndexador, 'dados:', !!indexadoresResp?.dados?.dados);
+            console.warn('⚠️ Corretora NÃO populado - comboCorretora:', !!comboCorretora, 'dados:', !!corretorasResp?.dados?.dados);
         }
         
-        // Popular combos fixos (sem banco)
-        if (comboTipoRent) {
-            comboTipoRent.innerHTML = `
+        // Popular Indexador (valores fixos)
+        if (comboIndexador) {
+            comboIndexador.innerHTML = `
                 <option value="">Selecione...</option>
-                <option value="PRE_FIXADO">PRE_FIXADO</option>
-                <option value="POS_FIXADO">POS_FIXADO</option>
-                <option value="HIBRIDO">HIBRIDO</option>
+                <option value="PRE_FIX">PRE_FIX</option>
+                <option value="%IPCA">%IPCA</option>
+                <option value="IPCA">IPCA</option>
+                <option value="IPCA+">IPCA+</option>
+                <option value="%CDI">%CDI</option>
+                <option value="CDI">CDI</option>
+                <option value="CDI+">CDI+</option>
+                <option value="%SELIC">%SELIC</option>
+                <option value="SELIC">SELIC</option>
+                <option value="SELIC+">SELIC+</option>
             `;
-        }
-        
-        if (comboLiquidez) {
-            comboLiquidez.innerHTML = `
-                <option value="">Selecione...</option>
-                <option value="DIARIA">DIARIA</option>
-                <option value="VENCIMENTO">VENCIMENTO</option>
-                <option value="PARCIAL">PARCIAL</option>
-            `;
-        }
-        
-        if (comboFGC) {
-            comboFGC.innerHTML = `
-                <option value="">Selecione...</option>
-                <option value="S">S</option>
-                <option value="N">N</option>
-            `;
-        }
-        
-        if (comboIOF) {
-            comboIOF.innerHTML = `
-                <option value="">Selecione...</option>
-                <option value="S">S</option>
-                <option value="N">N</option>
-            `;
-        }
-        
-        if (comboAtivo) {
-            comboAtivo.innerHTML = `
-                <option value="">Selecione...</option>
-                <option value="S">S</option>
-                <option value="N">N</option>
-            `;
+            console.log('✅ Indexador populado com opções fixas');
         }
         
         console.log('✅ Todos os combos do modal populados');
@@ -286,9 +228,10 @@ function validarCamposObrigatorios() {
     
     const tipo = document.getElementById('modal_id_tipo_investimento')?.value;
     const banco = document.getElementById('modal_id_banco_emissor')?.value;
-    const indexador = document.getElementById('modal_id_indexador')?.value;
+    const corretora = document.getElementById('modal_id_corretora')?.value;
+    const indexador = document.getElementById('modal_indexador')?.value;
     
-    console.log('📋 Valores lidos:', { tipo, banco, indexador });
+    console.log('📋 Valores lidos:', { tipo, banco, corretora, indexador });
     
     if (!tipo || tipo === '') {
         erros.push('Tipo de Investimento');
@@ -302,10 +245,16 @@ function validarCamposObrigatorios() {
         document.getElementById('modal_id_banco_emissor').style.borderWidth = '2px';
     }
     
+    if (!corretora || corretora === '') {
+        erros.push('Corretora');
+        document.getElementById('modal_id_corretora').style.borderColor = 'red';
+        document.getElementById('modal_id_corretora').style.borderWidth = '2px';
+    }
+    
     if (!indexador || indexador === '') {
         erros.push('Indexador');
-        document.getElementById('modal_id_indexador').style.borderColor = 'red';
-        document.getElementById('modal_id_indexador').style.borderWidth = '2px';
+        document.getElementById('modal_indexador').style.borderColor = 'red';
+        document.getElementById('modal_indexador').style.borderWidth = '2px';
     }
     
     if (erros.length > 0) {
@@ -314,7 +263,7 @@ function validarCamposObrigatorios() {
     }
     
     // Remove destaque vermelho se estava presente
-    ['modal_id_tipo_investimento', 'modal_id_banco_emissor', 'modal_id_indexador'].forEach(id => {
+    ['modal_id_tipo_investimento', 'modal_id_banco_emissor', 'modal_id_corretora', 'modal_indexador'].forEach(id => {
         const elem = document.getElementById(id);
         if (elem) {
             elem.style.borderColor = '';
@@ -336,12 +285,8 @@ function transferirValoresParaFormPrincipal() {
     const dados = {
         id_tipo_investimento: document.getElementById('modal_id_tipo_investimento')?.value || '',
         id_banco_emissor: document.getElementById('modal_id_banco_emissor')?.value || '',
-        id_indexador: document.getElementById('modal_id_indexador')?.value || '',
-        tipo_rentabilidade: document.getElementById('modal_tipo_rentabilidade')?.value || '',
-        liquidez: document.getElementById('modal_liquidez')?.value || '',
-        garantia_fgc: document.getElementById('modal_garantia_fgc')?.value || '',
-        iof_aplicavel: document.getElementById('modal_iof_aplicavel')?.value || '',
-        ativo: document.getElementById('modal_ativo')?.value || ''
+        id_corretora: document.getElementById('modal_id_corretora')?.value || '',
+        indexador: document.getElementById('modal_indexador')?.value || ''
     };
     
     console.log('📦 Dados coletados:', dados);
@@ -370,12 +315,7 @@ function obterTextosCombo(dados) {
     const mapeamento = {
         'id_tipo_investimento': 'modal_id_tipo_investimento',
         'id_banco_emissor': 'modal_id_banco_emissor',
-        'id_indexador': 'modal_id_indexador',
-        'tipo_rentabilidade': 'modal_tipo_rentabilidade',
-        'liquidez': 'modal_liquidez',
-        'garantia_fgc': 'modal_garantia_fgc',
-        'iof_aplicavel': 'modal_iof_aplicavel',
-        'ativo': 'modal_ativo'
+        'id_corretora': 'modal_id_corretora'
     };
     
     // Para cada campo, pega o texto da option selecionada
@@ -415,12 +355,8 @@ export async function abrirModalComValores(valoresAtuais) {
     const mapeamento = {
         'id_tipo_investimento': 'modal_id_tipo_investimento',
         'id_banco_emissor': 'modal_id_banco_emissor',
-        'id_indexador': 'modal_id_indexador',
-        'tipo_rentabilidade': 'modal_tipo_rentabilidade',
-        'liquidez': 'modal_liquidez',
-        'garantia_fgc': 'modal_garantia_fgc',
-        'iof_aplicavel': 'modal_iof_aplicavel',
-        'ativo': 'modal_ativo'
+        'id_corretora': 'modal_id_corretora',
+        'indexador': 'modal_indexador'
     };
     
     // Depois setar valores
@@ -455,8 +391,8 @@ export async function abrirModalNovo() {
     await popularCombosModal();
     
     // Limpar campos
-    const campos = ['modal_id_tipo_investimento', 'modal_id_banco_emissor', 'modal_id_indexador', 
-                    'modal_tipo_rentabilidade', 'modal_liquidez', 'modal_garantia_fgc', 'modal_iof_aplicavel', 'modal_ativo'];
+    const campos = ['modal_id_tipo_investimento', 'modal_id_banco_emissor', 'modal_id_corretora',
+                    'modal_indexador'];
     campos.forEach(id => {
         const combo = document.getElementById(id);
         if (combo) {

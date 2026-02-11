@@ -13,7 +13,7 @@ CREATE TABLE inv_rf (
     id_inv_rf SERIAL PRIMARY KEY,
     
     -- Identificação
-    id_usuario INTEGER NOT NULL REFERENCES usuario(id_usuario),
+    id_usuario INTEGER NOT NULL DEFAULT 1 REFERENCES usuario(id_usuario),
     id_tipo_investimento INTEGER NOT NULL REFERENCES tipo_investimento(id_tipo_investimento),
     id_banco_emissor INTEGER REFERENCES banco(id_banco),
     id_securitizadora INTEGER REFERENCES securitizadora(id_securitizadora),

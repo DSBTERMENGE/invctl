@@ -20,6 +20,10 @@ import { construirFormularioGestoras, iniciarPopulacaoGestoras } from './form_ge
 import { construirFormularioAdministradoras, iniciarPopulacaoAdministradoras } from './form_administradoras.js';
 import { construirFormularioInvRF, iniciarPopulacaoInvRF } from './form_inv_rf.js';
 import { construirFormularioPapeisRF, iniciarPopulacaoPapeisRF } from './form_papeis_rf.js';
+import { construirFormularioFundos, iniciarPopulacaoFundos } from './form_fundos.js';
+import { construirFormularioFundosEstruturados, iniciarPopulacaoFundosEstruturados } from './form_fundos_estruturados.js';
+import { construirFormularioAcoes, iniciarPopulacaoAcoes } from './form_acoes.js';
+import { construirFormularioInvFundos, iniciarPopulacaoInvFundos } from './form_inv_fundos.js';
 // import { construirFormularioRendaFixa } from './form_renda_fixa.js';
 
 // Importar relatórios
@@ -108,7 +112,7 @@ async function handlerMenuPrincipal(e) {
 /**
  * Handler do Menu Investimentos (3º nível)
  */
-function handlerMenuInvestimentos(e) {
+async function handlerMenuInvestimentos(e) {
     console.log('💰 Menu Investimentos - Botão clicado:', e.detail.label);
 
     switch (e.detail.label) {
@@ -131,8 +135,8 @@ function handlerMenuInvestimentos(e) {
 
         case "Inv. Fundos":
             console.log('📈 Abrindo formulário Inv. Fundos...');
-            alert('Formulário "Inv. Fundos" em desenvolvimento');
-            // TODO: window.api_info.form_ativo = construirFormInvFundos();
+            window.api_info.form_ativo = construirFormularioInvFundos();
+            await iniciarPopulacaoInvFundos();
             break;
 
         case "Inv. FII":
@@ -219,19 +223,22 @@ async function handlerMenuDetalhesInv(e) {
             await iniciarPopulacaoPapeisRF();
             break;
 
-        case "Detalhes Inv Fundos":
-            console.log('📈 Abrindo formulário Detalhes Inv Fundos...');
-            alert('Formulário "Detalhes Inv Fundos" em desenvolvimento');
+        case "Fundos":
+            console.log('🏦 Abrindo formulário Fundos...');
+            window.api_info.form_ativo = construirFormularioFundos();
+            await iniciarPopulacaoFundos();
+            break;
+
+        case "Fundos Estruturados":
+            console.log('🏗️ Abrindo formulário Fundos Estruturados...');
+            window.api_info.form_ativo = construirFormularioFundosEstruturados();
+            await iniciarPopulacaoFundosEstruturados();
             break;
             
-        case "Detalhes Inv FII":
-            console.log('🏢 Abrindo formulário Detalhes Inv FII...');
-            alert('Formulário "Detalhes Inv FII" em desenvolvimento');
-            break;
-            
-        case "Detalhes Inv RV":
-            console.log('📈 Abrindo formulário Detalhes Inv RV...');
-            alert('Formulário "Detalhes Inv RV" em desenvolvimento');
+        case "Ações":
+            console.log('📈 Abrindo formulário Ações...');
+            window.api_info.form_ativo = construirFormularioAcoes();
+            await iniciarPopulacaoAcoes();
             break;
 
         default:
@@ -478,7 +485,7 @@ export function constroiMenus() {
 
     // =============== Criando o sub menu Detalhes Inv (3º nível) ===============
     const menu_detalhes_inv = new CriarMenuAplicacao(
-        ["Tipo Investimento", "Papéis RF", "Detalhes Inv Fundos", "Detalhes Inv FII", "Detalhes Inv RV", "Retornar"],
+        ["Tipo Investimento", "Papéis RF", "Fundos", "Fundos Estruturados", "Ações", "Retornar"],
         "horizontal",
         "id_menu_detalhes_inv",
         "cmd"

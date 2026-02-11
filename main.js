@@ -167,6 +167,12 @@ async function validarLogin() {
     const resultado = await window.api_info.login(usuario, senha);
     
     if (resultado.success) {
+      // ✅ ARMAZENAR ID DO USUÁRIO LOGADO
+      if (resultado.id_usuario) {
+        window.api_info.id_usuario_logado = resultado.id_usuario;
+        console.log('✅ Usuário logado - ID:', resultado.id_usuario);
+      }
+      
       alert(resultado.message);
       document.getElementById('divFormLogin').classList.add('hidden');
       carregarInterfacePrincipal();

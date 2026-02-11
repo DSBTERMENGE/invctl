@@ -253,10 +253,18 @@ export function construirFormularioPapeisRF() {
     });
     
     // Listener para interceptar ações do formulário (INCLUIR e EDITAR)
-    document.addEventListener('formulario-acao', (e) => {
-        console.log('🎯 Evento formulario-acao:', e.detail);
-        
-        if (e.detail.acao === 'incluir') {
+    // Registra apenas UMA VEZ para evitar duplicação
+    if (!window._listenerPapeisRfRegistrado) {
+        document.addEventListener('formulario-acao', (e) => {
+            console.log('🎯 Evento formulario-acao:', e.detail);
+            
+            // Verifica se o evento é para a tabela 'papeis_rf'
+            if (window.api_info?.tabela_alvo !== 'papeis_rf') {
+                console.log('⏭️ Ignorando evento - tabela atual:', window.api_info?.tabela_alvo);
+                return; // Ignora evento de outras tabelas
+            }
+            
+            if (e.detail.acao === 'incluir') {
             console.log('🆕 Ação INCLUIR detectada - abrindo modal...');
             setTimeout(() => abrirModalNovo(), 300);
         } else if (e.detail.acao === 'editar') {
@@ -274,6 +282,10 @@ export function construirFormularioPapeisRF() {
             setTimeout(() => abrirModalComValores(valoresAtuais), 300);
         }
     }, true); // Captura na fase de capture para interceptar ANTES do framework processar
+        
+        window._listenerPapeisRfRegistrado = true;
+        console.log('✅ Listener papeis_rf registrado (UNICO)');
+    }
     
     // Popula select de pesquisa
     if (formPapeisRF.configSelects && formPapeisRF.configSelects.campos) {
