@@ -16,13 +16,11 @@ CREATE VIEW papeis_rf_view AS
 SELECT
     p.id_papel_rf,
     p.id_tipo_investimento,
-    ti.codigo AS tipo_investimento_texto,           -- Código curto (CDB, LCI)
-    ti.descricao AS tipo_investimento_desc,         -- Descrição completa
+    ti.codigo AS tipo_investimento_nome,            -- Código curto (CDB, LCI) - PADRONIZADO
     p.id_banco_emissor,
-    b.nome_completo AS banco_emissor_texto,         -- Nome do banco
+    b.nome_completo AS banco_emissor_nome,          -- Nome do banco - PADRONIZADO
     p.id_indexador,
-    idx.codigo AS indexador_texto,                  -- Código curto (CDI, IPCA)
-    idx.descricao AS indexador_nome,                -- Descrição completa
+    idx.codigo AS indexador_nome,                   -- Código curto (CDI, IPCA) - PADRONIZADO
     p.codigo_ativo,
     p.descricao,
     p.data_emissao,

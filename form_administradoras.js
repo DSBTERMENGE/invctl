@@ -38,9 +38,8 @@ export function construirFormularioAdministradoras() {
     // ✅ CONFIGURAÇÃO POR PROPRIEDADES (novo padrão)
     formAdministradoras.titulo = 'Administradoras de Fundos';
     formAdministradoras.descricao = ' - Cadastro de administradoras';
-    formAdministradoras.tipo = ['select', 'input', 'input', 'input', 'input', 'input', 'input', 'input', 'input', 'input', 'input', 'input', 'input', 'input', 'textarea']; 
+    formAdministradoras.tipo = ['input', 'input', 'input', 'input', 'input', 'input', 'input', 'input', 'input', 'input', 'input', 'textarea']; 
     formAdministradoras.label = [
-        'Banco', 
         'CNPJ', 
         'Nome Completo', 
         'Nome Fantasia', 
@@ -51,49 +50,40 @@ export function construirFormularioAdministradoras() {
         'Data Início Operação', 
         'Certificação ANBIMA',
         'Rating Controles Internos', 
-        'Taxa Administração Padrão (%)', 
-        'Taxa Performance Padrão (%)', 
         'Data Cadastro',
         'Observações'
     ];
     formAdministradoras.nomeCampo = [
-        'id_banco',
         'cnpj', 
         'nome_completo', 
         'nome_fantasia', 
         'codigo_cvm', 
-        'status_operacional', 
+        'status', 
         'patrimonio_administrado', 
         'numero_fundos_administrados',
         'data_inicio_operacao', 
         'possui_certificacao_anbima',
         'rating_controles_internos', 
-        'taxa_administracao_padrao', 
-        'taxa_performance_padrao', 
         'data_cadastro',
         'observacoes'
     ];
     formAdministradoras.format = [
-        'texto',
-        'texto', 
+        'cnpj', 
         'texto', 
         'texto', 
         'texto', 
         'texto', 
         'moeda', 
-        'texto',
+        'int',
         'data', 
         'texto',
         'texto', 
-        'pct', 
-        'pct', 
         'data',
         'texto'
     ];
     formAdministradoras.pos = [
-        {linha: 0, coluna: 0}, // Banco (select)
-        {linha: 0, coluna: 1}, // CNPJ
-        {linha: 0, coluna: 2}, // Nome Completo
+        {linha: 0, coluna: 0}, // CNPJ
+        {linha: 0, coluna: 1}, // Nome Completo
         {linha: 1, coluna: 0}, // Nome Fantasia
         {linha: 1, coluna: 1}, // Código CVM
         {linha: 1, coluna: 2}, // Status
@@ -102,17 +92,14 @@ export function construirFormularioAdministradoras() {
         {linha: 2, coluna: 2}, // Data Início Operação
         {linha: 3, coluna: 0}, // Certificação ANBIMA
         {linha: 3, coluna: 1}, // Rating Controles
-        {linha: 3, coluna: 2}, // Taxa Administração
-        {linha: 4, coluna: 0}, // Taxa Performance
-        {linha: 4, coluna: 1}, // Data Cadastro
-        {linha: 5, coluna: 0}  // Observações
+        {linha: 3, coluna: 2}, // Data Cadastro
+        {linha: 4, coluna: 0}  // Observações
     ];
     formAdministradoras.alinhamento = [
-        'H', 'H', 'H', 'H', 'H', 'H', 'H', 'H', 
-        'H', 'H', 'H', 'H', 'H', 'H', 'V'
+        'H', 'H', 'H', 'H', 'H', 'H', 
+        'H', 'H', 'H', 'H', 'H', 'V'
     ]; 
     formAdministradoras.largCampos = [
-        15, // Banco
         8,  // CNPJ
         25, // Nome Completo
         20, // Nome Fantasia
@@ -123,8 +110,6 @@ export function construirFormularioAdministradoras() {
         10, // Data Início
         10, // Certificação
         10, // Rating
-        8,  // Taxa Admin
-        8,  // Taxa Perf
         10, // Data Cadastro
         50  // Observações
     ]; 
@@ -137,7 +122,7 @@ export function construirFormularioAdministradoras() {
     window.api_info.campos = ['Todos']; 
     
     window.api_info.pk = 'id_administradora'; 
-    window.api_info.campos_relacionados = ['id_banco']; // FK para bancos
+    window.api_info.campos_relacionados = []; // Sem FKs
 
     // Configuração dos selects (PADRÃO 0F+1P)
     formAdministradoras.configSelects = {

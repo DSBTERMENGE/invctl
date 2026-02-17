@@ -24,6 +24,8 @@ import { construirFormularioFundos, iniciarPopulacaoFundos } from './form_fundos
 import { construirFormularioFundosEstruturados, iniciarPopulacaoFundosEstruturados } from './form_fundos_estruturados.js';
 import { construirFormularioAcoes, iniciarPopulacaoAcoes } from './form_acoes.js';
 import { construirFormularioInvFundos, iniciarPopulacaoInvFundos } from './form_inv_fundos.js';
+import { construirFormularioInvFundosEstruturados, iniciarPopulacaoInvFundosEstruturados } from './form_inv_fundos_estruturados.js';
+import { construirFormularioInvAcoes, iniciarPopulacaoInvAcoes } from './form_inv_acoes.js';
 // import { construirFormularioRendaFixa } from './form_renda_fixa.js';
 
 // Importar relatórios
@@ -140,15 +142,15 @@ async function handlerMenuInvestimentos(e) {
             break;
 
         case "Inv. FII":
-            console.log('🏢 Abrindo formulário Inv. FII...');
-            alert('Formulário "Inv. FII" em desenvolvimento');
-            // TODO: window.api_info.form_ativo = construirFormInvFII();
+            console.log('🏢 Abrindo formulário Inv. Fundos Estruturados...');
+            window.api_info.form_ativo = construirFormularioInvFundosEstruturados();
+            await iniciarPopulacaoInvFundosEstruturados();
             break;
 
         case "Inv. Ações":
             console.log('📊 Abrindo formulário Inv. Ações...');
-            alert('Formulário "Inv. Ações" em desenvolvimento');
-            // TODO: window.api_info.form_ativo = construirFormInvAcoes();
+            window.api_info.form_ativo = construirFormularioInvAcoes();
+            await iniciarPopulacaoInvAcoes();
             break;
 
         default:
@@ -175,8 +177,8 @@ function handlerMenuCadastro(e) {
             alternarMenu('id_menu_cadastro', 'id_menu_investimentos');
             break;
             
-        case "Detalhes Inv":
-            console.log('📋 Abrindo submenu Detalhes Inv...');
+        case "Papéis":
+            console.log('📋 Abrindo submenu Papéis...');
             alternarMenu('id_menu_cadastro', 'id_menu_detalhes_inv');
             break;
             
@@ -195,9 +197,9 @@ function handlerMenuCadastro(e) {
     }
 }
 
-// ============= HANDLER: Menu Detalhes Inv (3º nível) =============
+// ============= HANDLER: Menu Papéis (3º nível) =============
 async function handlerMenuDetalhesInv(e) {
-    console.log('📋 Menu Detalhes Inv - Botão clicado:', e.detail.label);
+    console.log('📋 Menu Papéis - Botão clicado:', e.detail.label);
 
     switch (e.detail.label) {
         case "Retornar":
@@ -474,7 +476,7 @@ export function constroiMenus() {
 
     // =============== Criando o sub menu Cadastro ===============
     const menu_cadastro = new CriarMenuAplicacao(
-        ["Investimentos", "Detalhes Inv", "Instit. Finan", "Índices", "Retornar"],
+        ["Investimentos", "Papéis", "Instit. Finan", "Índices", "Retornar"],
         "horizontal",
         "id_menu_cadastro",
         "cmd"
@@ -483,7 +485,7 @@ export function constroiMenus() {
     document.getElementById("id_menu_cadastro").style.display = "none";
     console.log('✅ Menu Cadastro criado (oculto)');
 
-    // =============== Criando o sub menu Detalhes Inv (3º nível) ===============
+    // =============== Criando o sub menu Papéis (3º nível) ===============
     const menu_detalhes_inv = new CriarMenuAplicacao(
         ["Tipo Investimento", "Papéis RF", "Fundos", "Fundos Estruturados", "Ações", "Retornar"],
         "horizontal",
@@ -492,7 +494,7 @@ export function constroiMenus() {
     );
     menu_detalhes_inv.renderizar();
     document.getElementById("id_menu_detalhes_inv").style.display = "none";
-    console.log('✅ Menu Detalhes Inv criado (oculto)');
+    console.log('✅ Menu Papéis criado (oculto)');
 
     // =============== Criando o sub menu Instituições Financeiras (3º nível) ===============
     const menu_instit_finan = new CriarMenuAplicacao(

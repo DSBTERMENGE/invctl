@@ -47,34 +47,34 @@ export function construirFormularioSecuritizadoras() {
     formSecuritizadoras.descricao = ' - Cadastro de empresas securitizadoras';
     formSecuritizadoras.tipo = [
         'input', 'input', 'input', 'input', 'input', 'input', 'input', 
-        'input', 'input', 'input', 'input', 'date', 'date', 'input', 
-        'input', 'input', 'input', 'input', 'textarea'
+        'input', 'input', 'input', 'date', 'date', 'input', 
+        'input', 'input', 'input', 'textarea'
     ]; 
     formSecuritizadoras.label = [
         'CNPJ', 'Nome Completo', 'Nome Fant.', 'Cód.CVM',
-        'Status Operacional', 'Capital Social (R$)', 'Patrimônio Líquido (R$)',
-        'Rating Fitch', 'Rating Moodys', 'Rating S&P', 'Rating Nacional',
+        'Status', 'Capital Social (R$)', 'Patrimônio Líquido (R$)',
+        'Rating Fitch', 'Rating Moodys', 'Rating S&P',
         'Data Atualização Rating', 'Data Início Operação',
         'Tot. Emissões Realizadas', 'Vol. Total Emitido (R$)', 'Tot. Emissões Ativas',
-        'Especialidade Setor', 'Qualidade Originação (A/B/C)',
+        'Especialidade Setor',
         'Observações'
     ];
     formSecuritizadoras.nomeCampo = [
         'cnpj', 'nome_completo', 'nome_fantasia', 'codigo_cvm',
-        'status_operacional', 'capital_social', 'patrimonio_liquido',
-        'rating_fitch', 'rating_moodys', 'rating_sp', 'rating_nacional',
+        'status', 'capital_social', 'patrimonio_liquido',
+        'rating_fitch', 'rating_moodys', 'rating_sp',
         'data_atualizacao_rating', 'data_inicio_operacao',
         'total_emissoes_realizadas', 'volume_total_emitido', 'total_emissoes_ativas',
-        'especialidade_setor', 'qualidade_originacao',
+        'especialidade_setor',
         'observacoes'
     ];
     formSecuritizadoras.format = [
-        'texto', 'texto', 'texto', 'texto',
+        'cnpj', 'texto', 'texto', 'texto',
         'texto', 'moeda', 'moeda',
-        'texto', 'texto', 'texto', 'texto',
+        'texto', 'texto', 'texto',
         'data', 'data',
         'int', 'moeda', 'int',
-        'texto', 'texto',
+        'texto',
         'texto'
     ];
     formSecuritizadoras.pos = [
@@ -82,42 +82,44 @@ export function construirFormularioSecuritizadoras() {
         {linha: 0, coluna: 1}, // Nome Completo
         {linha: 0, coluna: 2}, // Nome Fantasia
         {linha: 0, coluna: 3}, // Código CVM
-        {linha: 1, coluna: 0}, // Status Operacional
+        {linha: 1, coluna: 0}, // Status
         {linha: 1, coluna: 1}, // Capital Social
         {linha: 1, coluna: 2}, // Patrimônio Líquido
         {linha: 2, coluna: 0}, // Rating Fitch
         {linha: 2, coluna: 1}, // Rating Moodys
         {linha: 2, coluna: 2}, // Rating S&P
-        {linha: 2, coluna: 3}, // Rating Nacional
         {linha: 3, coluna: 0}, // Data Atualização Rating
         {linha: 3, coluna: 1}, // Data Início Operação
         {linha: 4, coluna: 0}, // Total Emissões Realizadas
         {linha: 4, coluna: 1}, // Volume Total Emitido
         {linha: 4, coluna: 2}, // Total Emissões Ativas
         {linha: 5, coluna: 0}, // Especialidade Setor
-        {linha: 5, coluna: 1}, // Qualidade Originação
         {linha: 6, coluna: 0}  // Observações
     ];
     formSecuritizadoras.alinhamento = [
-        'H', 'H', 'H', 'H', 'H', 'H', 'H', 
-        'H', 'H', 'H', 'H', 'H', 'H', 'H', 
-        'H', 'H', 'H', 'H', 'V'
+        'H', 'H', 'H', 'H', 
+        'H', 'H', 'H', 
+        'H', 'H', 'H', 
+        'H', 'H', 
+        'H', 'H', 'H', 
+        'H', 
+        'V'
     ]; 
     formSecuritizadoras.largCampos = [
         5, 15, 10, 7, 
         8, 12, 12, 
-        6, 6, 6, 8, 
+        6, 6, 6, 
         8, 8, 
         8, 12, 8, 
-        20, 6, 
+        20, 
         60
     ]; 
     formSecuritizadoras.posicaoCanvas = {x: 3, y: 5}; 
     formSecuritizadoras.grupoBotoes = ['S', 'S', 'S']; // Encerrar + Navegação + CRUD
     
-    window.api_info.tabela_alvo = 'securitizadora'; 
+    window.api_info.tabela_alvo = 'securitizadoras'; 
     window.api_info.campos_obrigatorios = ['cnpj', 'nome_completo']; 
-    window.api_info.view = "securitizadora_view"; 
+    window.api_info.view = "securitizadoras_view"; 
     window.api_info.campos = ['Todos']; 
     
     window.api_info.pk = 'id_securitizadora'; 

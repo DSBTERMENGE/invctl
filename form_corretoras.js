@@ -34,27 +34,23 @@ export function construirFormularioCorretoras() {
     // ✅ CONFIGURAÇÃO POR PROPRIEDADES (novo padrão)
     formCorretoras.titulo = 'Corretoras';
     formCorretoras.descricao = ' - Cadastro de corretoras e distribuidoras';
-    formCorretoras.tipo = ['input', 'input', 'input', 'input', 'input', 'input', 'input', 'input', 'input', 'input', 'input', 'input', 'textarea']; 
-    formCorretoras.label = ['CNPJ', 'Nome Completo', 'Nome Fantasia', 'Código CVM', 'Tipo', 'Status', 'Email', 'Telefone', 'Website', 'Taxa Custódia RV (%)', 'Taxa Corretagem (R$)', 'Ativo', 'Observações'];
-    formCorretoras.nomeCampo = ['cnpj', 'nome_completo', 'nome_fantasia', 'codigo_cvm', 'tipo', 'status_operacional', 'email_insitucional', 'telefone_institucional', 'website', 'taxa_custodia_renda_variavel', 'taxa_corretagem_padrao', 'ativo', 'observacoes'];
-    formCorretoras.format = ['texto', 'texto', 'texto', 'texto', 'texto', 'texto', 'texto', 'texto', 'texto', 'pct', 'moeda', 'texto', 'texto'];
+    formCorretoras.tipo = ['input', 'input', 'input', 'input', 'input', 'input', 'input', 'input', 'textarea']; 
+    formCorretoras.label = ['CNPJ', 'Nome Completo', 'Nome Fantasia', 'Código CVM', 'Status', 'Email', 'Telefone', 'Website', 'Observações'];
+    formCorretoras.nomeCampo = ['cnpj', 'nome_completo', 'nome_fantasia', 'codigo_cvm', 'status', 'email_insitucional', 'telefone_institucional', 'website', 'observacoes'];
+    formCorretoras.format = ['cnpj', 'texto', 'texto', 'texto', 'texto', 'texto', 'texto', 'texto', 'texto'];
     formCorretoras.pos = [
         {linha: 0, coluna: 0}, // CNPJ
         {linha: 0, coluna: 1}, // Nome Completo
         {linha: 1, coluna: 0}, // Nome Fantasia
         {linha: 1, coluna: 1}, // Código CVM
-        {linha: 2, coluna: 0}, // Tipo
-        {linha: 2, coluna: 1}, // Status
-        {linha: 2, coluna: 2}, // Ativo
+        {linha: 2, coluna: 0}, // Status
         {linha: 3, coluna: 0}, // Email
         {linha: 3, coluna: 1}, // Telefone
         {linha: 3, coluna: 2}, // Website
-        {linha: 4, coluna: 0}, // Taxa Custódia RV
-        {linha: 4, coluna: 1}, // Taxa Corretagem
-        {linha: 5, coluna: 0}  // Observações
+        {linha: 4, coluna: 0}  // Observações
     ];
-    formCorretoras.alinhamento = ['H', 'H', 'H', 'H', 'H', 'H', 'H', 'H', 'H', 'H', 'H', 'H', 'V']; 
-    formCorretoras.largCampos = [8, 20, 20, 7, 8, 6, 15, 9, 15, 10, 8, 8, 50]; 
+    formCorretoras.alinhamento = ['H', 'H', 'H', 'H', 'H', 'H', 'H', 'H', 'V']; 
+    formCorretoras.largCampos = [8, 20, 20, 7, 6, 15, 9, 15, 50]; 
     formCorretoras.posicaoCanvas = {x: 3, y: 5}; 
     formCorretoras.grupoBotoes = ['S', 'S', 'S']; // Encerrar + Navegação + CRUD
     

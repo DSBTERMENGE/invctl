@@ -10,6 +10,13 @@ import {
     construirFiltroInicial,
 } from '../framework_dsb/frontend/General_Classes/OperacoesCRUD.js';
 
+// Importação do Modal de Tipo de Operação
+import { 
+    construirModalTipoOperacaoFundo,
+    abrirModalNovo,
+    abrirModalComValores
+} from './modal_tipo_operacao_fundo.js';
+
 
 /*
 ************************************************************
@@ -23,7 +30,7 @@ Campos principais:
 - id_fundo (select populado da tabela fundo)
 - id_corretora (select populado da tabela corretoras)
 - data_operacao
-- tipo_operacao (D=Aporte, C=Resgate)
+- tipo_operacao (selecionado via modal, exibe descrição completa)
 - valor
 - observacoes
 
@@ -46,7 +53,7 @@ export function construirFormularioInvFundos() {
         'select',   // 1. id_fundo
         'select',   // 2. id_corretora
         'input',    // 3. data_operacao
-        'select',   // 4. tipo_operacao
+        'input',    // 4. tipo_operacao (readonly, selecionado via modal)
         'input',    // 5. valor
         'textarea'  // 6. observacoes
     ]; 
@@ -54,7 +61,7 @@ export function construirFormularioInvFundos() {
         'Fundo',                     // 1. id_fundo
         'Corretora',                 // 2. id_corretora
         'Data Operação',             // 3. data_operacao
-        'Tipo Operação',             // 4. tipo_operacao
+        'Tipo de Operação',          // 4. tipo_operacao
         'Valor',                     // 5. valor
         'Observações'                // 6. observacoes
     ];
@@ -71,14 +78,14 @@ export function construirFormularioInvFundos() {
         null,        // 1. id_fundo (select)
         null,        // 2. id_corretora (select)
         'texto',     // 3. data_operacao
-        null,        // 4. tipo_operacao (select)
+        'texto',     // 4. tipo_operacao
         'moeda',     // 5. valor
         'texto'      // 6. observacoes
     ];
     
     formInvFundos.pos = [
         {linha: 1, coluna: 0}, {linha: 1, coluna: 1},    // fundo, corretora
-        {linha: 2, coluna: 0}, {linha: 2, coluna: 1},    // data, tipo
+        {linha: 2, coluna: 0}, {linha: 2, coluna: 1},    // data, tipo_operacao
         {linha: 3, coluna: 0},                           // valor
         {linha: 4, coluna: 0}                            // observacoes
     ];
@@ -92,7 +99,7 @@ export function construirFormularioInvFundos() {
     
     formInvFundos.largCampos = [
         25, 20,                      // fundo, corretora
-        12, 15,                      // data, tipo
+        12, 25,                      // data, tipo_operacao
         15,                          // valor
         60                           // observacoes
     ]; 
@@ -119,6 +126,18 @@ export function construirFormularioInvFundos() {
 
     // ✅ RENDERIZAÇÃO MANUAL
     formInvFundos.render();
+    
+    // ============= CONFIGURAR CAMPOS ESPECIAIS =============
+    setTimeout(() => {
+        // Campo tipo_operacao readonly permanente
+        const inputTipo = document.getElementById('tipo_operacao');
+        if (inputTipo) {
+            inputTipo.readOnly = true;
+            inputTipo.style.backgroundColor = '#f0f0f0';
+            inputTipo.style.cursor = 'not-allowed';
+            inputTipo.placeholder = '(Configurar via modal)';
+        }
+    }, 100);
     
     // ============= POPULAR SELECTS APÓS RENDERIZAÇÃO =============
     setTimeout(async () => {
@@ -157,21 +176,67 @@ export function construirFormularioInvFundos() {
                 }
             }
             
-            // Popular select de Tipo Operação com opções fixas
-            const selectTipo = document.getElementById('tipo_operacao');
-            if (selectTipo) {
-                selectTipo.innerHTML = `
-                    <option value="">Selecione...</option>
-                    <option value="D">D - Aporte (Débito)</option>
-                    <option value="C">C - Resgate (Crédito)</option>
-                `;
-                console.log('✅ Select Tipo Operação populado');
-            }
-            
         } catch (erro) {
             console.error('❌ Erro ao popular selects:', erro);
         }
     }, 300);
+    
+    // ============= CONSTRUIR MODAL E LISTENERS =============
+    construirModalTipoOperacaoFundo();
+    
+    // Listener para capturar valores do modal
+    document.addEventListener('modal-tipo-operacao-fundo-confirmado', (e) => {
+        console.log('📥 Evento modal-tipo-operacao-fundo-confirmado recebido:', e.detail);
+        
+        const valores = e.detail.valores;
+        
+        // Preencher campo tipo_operacao com a descrição completa
+        const inputTipo = document.getElementById('tipo_operacao');
+        
+        if (inputTipo) {
+            inputTipo.value = valores.tipo_operacao_descricao;
+            console.log(`✅ tipo_operacao = ${valores.tipo_operacao_descricao}`);
+        }
+    });
+    
+    // Listener para abrir modal ao clicar Incluir ou Editar
+    if (!window._listenerInvFundosRegistrado) {
+        document.addEventListener('formulario-acao', async (e) => {
+            // Verifica se o evento é para a tabela 'investimento_fundo'
+            if (window.api_info?.tabela_alvo !== 'investimento_fundo') {
+                return; // Ignora evento de outras tabelas
+            }
+            
+            if (e.detail.acao === 'incluir') {
+                console.log('➕ Ação Incluir detectada - abrindo modal...');
+                setTimeout(() => abrirModalNovo(), 300);
+            }
+            
+            if (e.detail.acao === 'editar') {
+                console.log('✏️ Ação Editar detectada - abrindo modal com valores atuais...');
+                
+                // Capturar valor atual - extrair a letra do início da descrição
+                const inputTipo = document.getElementById('tipo_operacao');
+                const descricaoCompleta = inputTipo?.value || '';
+                
+                // Mapear descrição para código (ex: "Aporte (Aplicação)" -> "D")
+                let codigo = '';
+                if (descricaoCompleta.startsWith('Aporte')) codigo = 'D';
+                else if (descricaoCompleta.startsWith('Resgate')) codigo = 'C';
+                else if (descricaoCompleta.startsWith('Come-Cotas')) codigo = 'T';
+                else if (descricaoCompleta.startsWith('Outros')) codigo = 'O';
+                
+                const valoresAtuais = {
+                    tipo_operacao: codigo
+                };
+                
+                setTimeout(() => abrirModalComValores(valoresAtuais), 300);
+            }
+        });
+        
+        window._listenerInvFundosRegistrado = true;
+        console.log('✅ Listener formulario-acao registrado para investimento_fundo');
+    }
     
     return formInvFundos;
 }

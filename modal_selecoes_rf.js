@@ -72,8 +72,8 @@ function criarModalHTML() {
     
     const modalHTML = `
         <div id="modal-selecoes-rf" style="display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
-            <div style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); min-width: 600px; max-height: 80vh; overflow-y: auto;">
-                <h2 style="margin: 0 0 20px 0; color: #333;">Selecionar Parâmetros do Papel RF</h2>
+            <div class="draggable-modal" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); min-width: 600px; max-height: 80vh; overflow-y: auto;">
+                <h2 class="modal-header" style="margin: 0 0 20px 0; color: #333; cursor: move;">Selecionar Parâmetros do Papel RF</h2>
                 <form id="form-selecoes-rf">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                         <div>
@@ -89,15 +89,51 @@ function criarModalHTML() {
                             </select>
                         </div>
                         <div>
-                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Corretora *</label>
-                            <select id="modal_id_corretora" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Indexador *</label>
+                            <select id="modal_id_indexador" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
                                 <option value="">Selecione...</option>
                             </select>
                         </div>
                         <div>
-                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Indexador *</label>
-                            <select id="modal_indexador" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Tipo Rentabilidade *</label>
+                            <select id="modal_tipo_rentabilidade" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
                                 <option value="">Selecione...</option>
+                                <option value="PRE_FIXADO">Pré-Fixado</option>
+                                <option value="POS_FIXADO">Pós-Fixado</option>
+                                <option value="HIBRIDO">Híbrido</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Liquidez *</label>
+                            <select id="modal_liquidez" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                                <option value="">Selecione...</option>
+                                <option value="DIARIA">Diária</option>
+                                <option value="VENCIMENTO">No Vencimento</option>
+                                <option value="PARCIAL">Parcial</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Garantia FGC *</label>
+                            <select id="modal_garantia_fgc" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                                <option value="">Selecione...</option>
+                                <option value="S">Sim</option>
+                                <option value="N">Não</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">IOF Aplicável *</label>
+                            <select id="modal_iof_aplicavel" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                                <option value="">Selecione...</option>
+                                <option value="S">Sim</option>
+                                <option value="N">Não</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Ativo *</label>
+                            <select id="modal_ativo" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                                <option value="">Selecione...</option>
+                                <option value="S">Sim</option>
+                                <option value="N">Não</option>
                             </select>
                         </div>
                     </div>
@@ -123,7 +159,60 @@ function criarModalHTML() {
         }
     });
     
+    // 🎯 Habilitar funcionalidade de arrastar
+    habilitarDragModal();
+    
     console.log('✅ HTML do modal criado no DOM');
+}
+
+/**
+ * 🎯 Habilita funcionalidade de arrastar o modal
+ */
+function habilitarDragModal() {
+    const modalContainer = document.querySelector('#modal-selecoes-rf .draggable-modal');
+    const header = document.querySelector('#modal-selecoes-rf .modal-header');
+    
+    if (!modalContainer || !header) return;
+    
+    let isDragging = false;
+    let dragOffset = { x: 0, y: 0 };
+    
+    // Inicia drag
+    header.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        const rect = modalContainer.getBoundingClientRect();
+        dragOffset = {
+            x: e.clientX - rect.left,
+            y: e.clientY - rect.top
+        };
+        e.preventDefault();
+    });
+    
+    // Move durante drag
+    document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        
+        const x = e.clientX - dragOffset.x;
+        const y = e.clientY - dragOffset.y;
+        
+        // Limites da viewport
+        const maxX = window.innerWidth - modalContainer.offsetWidth;
+        const maxY = window.innerHeight - modalContainer.offsetHeight;
+        
+        const finalX = Math.max(0, Math.min(x, maxX));
+        const finalY = Math.max(0, Math.min(y, maxY));
+        
+        modalContainer.style.left = finalX + 'px';
+        modalContainer.style.top = finalY + 'px';
+        modalContainer.style.transform = 'none';
+    });
+    
+    // Finaliza drag
+    document.addEventListener('mouseup', () => {
+        isDragging = false;
+    });
+    
+    console.log('✅ Drag habilitado no modal de seleções RF');
 }
 
 /**
@@ -136,13 +225,11 @@ async function popularCombosModal() {
         // Busca elementos
         const comboTipo = document.getElementById('modal_id_tipo_investimento');
         const comboBanco = document.getElementById('modal_id_banco_emissor');
-        const comboCorretora = document.getElementById('modal_id_corretora');
-        const comboIndexador = document.getElementById('modal_indexador');
+        const comboIndexador = document.getElementById('modal_id_indexador');
         
         console.log('🔍 DEBUG - Elementos encontrados:', {
             comboTipo: !!comboTipo,
             comboBanco: !!comboBanco,
-            comboCorretora: !!comboCorretora,
             comboIndexador: !!comboIndexador
         });
         
@@ -179,37 +266,19 @@ async function popularCombosModal() {
             console.warn('⚠️ Banco NÃO populado - comboBanco:', !!comboBanco, 'dados:', !!bancosResp?.dados?.dados);
         }
         
-        // Popular Corretora
-        console.log('📡 Buscando corretoras...');
-        const corretorasResp = await window.api_info.consulta_dados_form('corretoras_view');
-        console.log('📦 Resposta corretoras:', corretorasResp);
-        if (comboCorretora && corretorasResp?.dados?.dados) {
+        // Popular Indexador do banco
+        console.log('📡 Buscando indexadores...');
+        const indexadorResp = await window.api_info.consulta_dados_form('indexador');
+        console.log('📦 Resposta indexadores:', indexadorResp);
+        if (comboIndexador && indexadorResp?.dados?.dados) {
             let html = '<option value="">Selecione...</option>';
-            corretorasResp.dados.dados.forEach(item => {
-                html += `<option value="${item.id_corretora}">${item.nome_completo}</option>`;
+            indexadorResp.dados.dados.forEach(item => {
+                html += `<option value="${item.id_indexador}">${item.codigo}</option>`;
             });
-            comboCorretora.innerHTML = html;
-            console.log(`✅ Corretora populado: ${corretorasResp.dados.dados.length} opções`);
+            comboIndexador.innerHTML = html;
+            console.log(`✅ Indexador populado: ${indexadorResp.dados.dados.length} opções`);
         } else {
-            console.warn('⚠️ Corretora NÃO populado - comboCorretora:', !!comboCorretora, 'dados:', !!corretorasResp?.dados?.dados);
-        }
-        
-        // Popular Indexador (valores fixos)
-        if (comboIndexador) {
-            comboIndexador.innerHTML = `
-                <option value="">Selecione...</option>
-                <option value="PRE_FIX">PRE_FIX</option>
-                <option value="%IPCA">%IPCA</option>
-                <option value="IPCA">IPCA</option>
-                <option value="IPCA+">IPCA+</option>
-                <option value="%CDI">%CDI</option>
-                <option value="CDI">CDI</option>
-                <option value="CDI+">CDI+</option>
-                <option value="%SELIC">%SELIC</option>
-                <option value="SELIC">SELIC</option>
-                <option value="SELIC+">SELIC+</option>
-            `;
-            console.log('✅ Indexador populado com opções fixas');
+            console.warn('⚠️ Indexador NÃO populado - comboIndexador:', !!comboIndexador, 'dados:', !!indexadorResp?.dados?.dados);
         }
         
         console.log('✅ Todos os combos do modal populados');
@@ -228,34 +297,36 @@ function validarCamposObrigatorios() {
     
     const tipo = document.getElementById('modal_id_tipo_investimento')?.value;
     const banco = document.getElementById('modal_id_banco_emissor')?.value;
-    const corretora = document.getElementById('modal_id_corretora')?.value;
-    const indexador = document.getElementById('modal_indexador')?.value;
+    const indexador = document.getElementById('modal_id_indexador')?.value;
+    const tipoRent = document.getElementById('modal_tipo_rentabilidade')?.value;
+    const liquidez = document.getElementById('modal_liquidez')?.value;
+    const fgc = document.getElementById('modal_garantia_fgc')?.value;
+    const iof = document.getElementById('modal_iof_aplicavel')?.value;
+    const ativo = document.getElementById('modal_ativo')?.value;
     
-    console.log('📋 Valores lidos:', { tipo, banco, corretora, indexador });
+    console.log('📋 Valores lidos:', { tipo, banco, indexador, tipoRent, liquidez, fgc, iof, ativo });
     
-    if (!tipo || tipo === '') {
-        erros.push('Tipo de Investimento');
-        document.getElementById('modal_id_tipo_investimento').style.borderColor = 'red';
-        document.getElementById('modal_id_tipo_investimento').style.borderWidth = '2px';
-    }
+    const camposObrigatorios = [
+        { id: 'modal_id_tipo_investimento', valor: tipo, nome: 'Tipo de Investimento' },
+        { id: 'modal_id_banco_emissor', valor: banco, nome: 'Banco Emissor' },
+        { id: 'modal_id_indexador', valor: indexador, nome: 'Indexador' },
+        { id: 'modal_tipo_rentabilidade', valor: tipoRent, nome: 'Tipo Rentabilidade' },
+        { id: 'modal_liquidez', valor: liquidez, nome: 'Liquidez' },
+        { id: 'modal_garantia_fgc', valor: fgc, nome: 'Garantia FGC' },
+        { id: 'modal_iof_aplicavel', valor: iof, nome: 'IOF Aplicável' },
+        { id: 'modal_ativo', valor: ativo, nome: 'Ativo' }
+    ];
     
-    if (!banco || banco === '') {
-        erros.push('Banco Emissor');
-        document.getElementById('modal_id_banco_emissor').style.borderColor = 'red';
-        document.getElementById('modal_id_banco_emissor').style.borderWidth = '2px';
-    }
-    
-    if (!corretora || corretora === '') {
-        erros.push('Corretora');
-        document.getElementById('modal_id_corretora').style.borderColor = 'red';
-        document.getElementById('modal_id_corretora').style.borderWidth = '2px';
-    }
-    
-    if (!indexador || indexador === '') {
-        erros.push('Indexador');
-        document.getElementById('modal_indexador').style.borderColor = 'red';
-        document.getElementById('modal_indexador').style.borderWidth = '2px';
-    }
+    camposObrigatorios.forEach(campo => {
+        if (!campo.valor || campo.valor === '') {
+            erros.push(campo.nome);
+            const elem = document.getElementById(campo.id);
+            if (elem) {
+                elem.style.borderColor = 'red';
+                elem.style.borderWidth = '2px';
+            }
+        }
+    });
     
     if (erros.length > 0) {
         alert(`⚠️ Campos obrigatórios não preenchidos:\n\n• ${erros.join('\n• ')}\n\nPreencha os campos marcados com * (asterisco)`);
@@ -263,8 +334,8 @@ function validarCamposObrigatorios() {
     }
     
     // Remove destaque vermelho se estava presente
-    ['modal_id_tipo_investimento', 'modal_id_banco_emissor', 'modal_id_corretora', 'modal_indexador'].forEach(id => {
-        const elem = document.getElementById(id);
+    camposObrigatorios.forEach(campo => {
+        const elem = document.getElementById(campo.id);
         if (elem) {
             elem.style.borderColor = '';
             elem.style.borderWidth = '';
@@ -285,8 +356,12 @@ function transferirValoresParaFormPrincipal() {
     const dados = {
         id_tipo_investimento: document.getElementById('modal_id_tipo_investimento')?.value || '',
         id_banco_emissor: document.getElementById('modal_id_banco_emissor')?.value || '',
-        id_corretora: document.getElementById('modal_id_corretora')?.value || '',
-        indexador: document.getElementById('modal_indexador')?.value || ''
+        id_indexador: document.getElementById('modal_id_indexador')?.value || '',
+        tipo_rentabilidade: document.getElementById('modal_tipo_rentabilidade')?.value || '',
+        liquidez: document.getElementById('modal_liquidez')?.value || '',
+        garantia_fgc: document.getElementById('modal_garantia_fgc')?.value || '',
+        iof_aplicavel: document.getElementById('modal_iof_aplicavel')?.value || '',
+        ativo: document.getElementById('modal_ativo')?.value || ''
     };
     
     console.log('📦 Dados coletados:', dados);
@@ -311,19 +386,30 @@ function transferirValoresParaFormPrincipal() {
 function obterTextosCombo(dados) {
     const textos = {};
     
-    // Mapear de chave de dados para ID do modal
+    // Mapear campo ID → campo TEXTO
     const mapeamento = {
+        'id_tipo_investimento': 'tipo_investimento_nome',
+        'id_banco_emissor': 'banco_emissor_nome',
+        'id_indexador': 'indexador_nome'
+    };
+    
+    // Mapear campo ID → ID do modal
+    const mapeamentoModal = {
         'id_tipo_investimento': 'modal_id_tipo_investimento',
         'id_banco_emissor': 'modal_id_banco_emissor',
-        'id_corretora': 'modal_id_corretora'
+        'id_indexador': 'modal_id_indexador'
     };
     
     // Para cada campo, pega o texto da option selecionada
     Object.keys(dados).forEach(nomeCampo => {
-        const idModal = mapeamento[nomeCampo];
-        const combo = document.getElementById(idModal);
-        if (combo && combo.selectedIndex >= 0) {
-            textos[nomeCampo] = combo.options[combo.selectedIndex].text;
+        const idModal = mapeamentoModal[nomeCampo];
+        const campoTexto = mapeamento[nomeCampo];
+        
+        if (idModal && campoTexto) {
+            const combo = document.getElementById(idModal);
+            if (combo && combo.selectedIndex >= 0) {
+                textos[campoTexto] = combo.options[combo.selectedIndex].text;
+            }
         }
     });
     
@@ -355,8 +441,12 @@ export async function abrirModalComValores(valoresAtuais) {
     const mapeamento = {
         'id_tipo_investimento': 'modal_id_tipo_investimento',
         'id_banco_emissor': 'modal_id_banco_emissor',
-        'id_corretora': 'modal_id_corretora',
-        'indexador': 'modal_indexador'
+        'id_indexador': 'modal_id_indexador',
+        'tipo_rentabilidade': 'modal_tipo_rentabilidade',
+        'liquidez': 'modal_liquidez',
+        'garantia_fgc': 'modal_garantia_fgc',
+        'iof_aplicavel': 'modal_iof_aplicavel',
+        'ativo': 'modal_ativo'
     };
     
     // Depois setar valores
